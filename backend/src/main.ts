@@ -15,9 +15,12 @@ const internetSearch = tool(
     topic?: "general" | "news" | "finance";
     includeRawContent?: boolean;
   }) => {
+    const apiKey = process.env.TAVILY_API_KEY;
+    if (!apiKey) throw new Error("TAVILY_API_KEY not set");
+
     const tavilySearch = new TavilySearch({
       maxResults,
-      tavilyApiKey: process.env.TAVILY_API_KEY,
+      tavilyApiKey: apiKey,
       includeRawContent,
       topic,
     });
