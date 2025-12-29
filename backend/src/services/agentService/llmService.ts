@@ -3,9 +3,8 @@ import {z} from "zod";
 import type {IMessage} from "../../models/Message.js";
 import dotenv from "dotenv";
 import { llmModel } from "../../config/llm.js";
-import { AgentStateSchema, type AgentState } from "./llmSchema.js";
 import {getHistoricalEstimatesTool, pdfReaderTool} from "./tools.js";
-import {testSystemPrompt, userPrompt} from "./prompts.js";
+import {testSystemPrompt} from "./prompts.js";
 dotenv.config()
 
 
@@ -19,7 +18,7 @@ const agent = createDeepAgent({
 export async function runAgent(message: IMessage) {
     const result = await agent.invoke({
         messages: [
-          { role: "user", content: userPrompt },
+          // { role: "user", content: userPrompt },
           {role: message.sender, content: message.content},
           {role: message.sender, content: message.attachedFiles}
         ],

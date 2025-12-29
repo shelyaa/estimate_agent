@@ -5,7 +5,8 @@ import type { IMessage } from "../models/Message.js";
 export async function sendMessage(req: Request, res: Response) {
     try {
         const userMessage = req?.body?.message;
-        const file = req?.file?.destination
+        const file = req?.file?.path
+
         if (!userMessage) throw new Error("Message is required");
         const message: IMessage = {sender: 'user', content: userMessage, attachedFiles: file ? file : ''}
         const result = await sendMessageToAgent(message);
