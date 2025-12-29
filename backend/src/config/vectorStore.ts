@@ -56,18 +56,18 @@ export function getVectorStore() {
     return {vectorStore, collection};
 }
 
-export async function saveExcelToVectorDB() {
-    await convertExcelToCSVAndSave(excelPath, csvPath);
-
-    const {vectorStore, collection} = getVectorStore();
-
-    const loader = new CSVLoader(csvPath)
-    const docs = await loader.load();
-
-    if (collection) {
-        await collection.deleteMany({ "source": csvPath });
-    }
-
-    await vectorStore.addDocuments(docs);
-    console.log("Saved documents to vector DB");
-}
+// export async function saveExcelToVectorDB() {
+//     await convertExcelToCSVAndSave(excelPath, csvPath);
+//
+//     const {vectorStore, collection} = getVectorStore();
+//
+//     const loader = new CSVLoader(csvPath)
+//     const docs = await loader.load();
+//
+//     if (collection) {
+//         await collection.deleteMany({ "source": csvPath });
+//     }
+//
+//     await vectorStore.addDocuments(docs);
+//     console.log("Saved documents to vector DB");
+// }
