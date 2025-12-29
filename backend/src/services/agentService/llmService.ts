@@ -6,9 +6,17 @@ import dotenv from "dotenv";
 import { llmModel } from "../../config/llm.js";
 import {getHistoricalEstimatesTool, pdfReaderTool} from "./tools.js";
 import {testSystemPrompt} from "./prompts.js";
+import {MongoClient} from "mongodb";
+import {MongoDBSaver} from "@langchain/langgraph-checkpoint-mongodb";
 dotenv.config()
 
-const checkpointer = new MemorySaver();
+const mongoUri = process.env.MONGO_URI;
+if(!mongoUri) {
+    throw new Error("MONGO_URI not set in environment variables");
+}
+const client = new MongoClient(mongoUri);
+// @ts-ignore
+const checkpointer = new MongoDBSaver({ client });
 
 const agent = createDeepAgent({
     model: llmModel(),
