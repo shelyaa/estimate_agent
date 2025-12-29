@@ -5,13 +5,13 @@ const senders = ['user', 'agent'] as const;
 
 export interface IMessage {
     content: string;
-    attachedFiles: Array<{path: string}>
+    attachedFiles?: string
     sender: 'user' | 'agent';
 }
 
 const messageSchema = new Schema<IMessage>({
     content: String,
-    attachedFiles: [{path: String}],
+    attachedFiles: String,
     sender: {
         type: String,
         enum: senders

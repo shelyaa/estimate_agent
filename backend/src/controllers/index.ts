@@ -1,11 +1,13 @@
 import type {Request, Response} from "express";
 import {getAllMessages, sendMessageToAgent} from "../services/messagesService.js"
+import type { IMessage } from "../models/Message.js";
 
 export async function sendMessage(req: Request, res: Response) {
     try {
-        const message = req?.body?.message;
-        if (!message) throw new Error("Message is required");
-
+        const userMessage = req?.body?.message;
+        const file = req?.file?.destination
+        if (!userMessage) throw new Error("Message is required");
+        const message: IMessage = {sender: 'user', content: userMessage, attachedFiles: file ? file : ''}
         const result = await sendMessageToAgent(message);
 
         res.json(result);
@@ -22,4 +24,5 @@ export async function getMessages(req: Request, res: Response) {
         res.status(500).json({ message: err.message });
     }
 }
+
 

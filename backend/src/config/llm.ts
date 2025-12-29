@@ -7,9 +7,9 @@ const googleApiKey = process.env.GOOGLE_API_KEY;
 const openAiApiKey = process.env.OPENAI_API_KEY;
 
 if(!googleApiKey) {
-  throw new Error("GOOGLE_API_KEY not set");
+  console.warn("GOOGLE_API_KEY not set");
 } else if (!openAiApiKey){
-  throw new Error("OPENAI_API_KEY not set");
+  console.warn("OPENAI_API_KEY not set");
 }
 
 export const llmModel = () => {
