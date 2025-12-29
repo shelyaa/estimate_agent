@@ -11,16 +11,17 @@ export async function sendMessage(req: Request, res: Response) {
 
         const stream = await sendMessageToAgent(message);
 
-        for await (const event of stream) {
-            if (event.event === "on_chat_model_stream") {
-                const token = event.data?.chunk?.content;
+        for await (const chunk of stream) {
+            console.log(chunk)
+            if (chunk.event === "on_chat_model_stream") {
+                const token = chunk.data?.chunk?.content;
 
                 if (token) {
                     res.write(`data: ${token}\n\n`);
                 }
             }
 
-            if (event.event === "on_chain_end") {
+            if (chunk.event === "on_chain_end") {
                 res.write(`event: end\ndata: done\n\n`);
             }
         }
