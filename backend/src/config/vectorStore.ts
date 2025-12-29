@@ -12,7 +12,7 @@ import { OpenAIEmbeddings } from "@langchain/openai";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const excelPath = `${__dirname}/../../../mocks/utilities_mvp_mock_format_2.xlsx`;
+const excelPath = `${__dirname}/../../../mocks/utilities_mvp_mock_format.xlsx`;
 const csvPath = `${__dirname}/../../../mocks/utilities_mvp_mock_format.csv`;
 
 let vectorStore: MongoDBAtlasVectorSearch | null = null;

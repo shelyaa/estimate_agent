@@ -1,0 +1,102 @@
+﻿Task,Milestone,"Total, hr.","Front view, hr.","Front logic, hr.","Back api, hr.","Back logic, hr.","Database, hr.","Testing, hr.","Automation test, hr.","Docs, hr.","UI Design, hr.","Management, hr.","Risk, hr."
+Project kickoff & requirements workshop (utilities tracking & payments),Discovery & Planning,5,0,2,0,0,0,0,0,0,0,2,1
+"Define MVP scope + acceptance criteria (providers, bills, payments)",Discovery & Planning,4,0,2,0,0,0,0,0,0,0,1,1
+User flow mapping (accounts â bills â payment â history),Discovery & Planning,6,0,3,0,0,0,0,0,0,0,2,1
+"Low-fidelity wireframes (dashboard, bill details, pay flow)",Discovery & Planning,9,0,2,0,0,0,0,0,0,0,6,1
+React Native bootstrap + repo setup,Setup,6,0,3,2,0,0,0,0,0,0,0,1
+Lint/format + git hooks,Setup,4.5,0,2,2,0,0,0,0,0,0,0,0.5
+Navigation base structure,Setup,6.5,0,2,4,0,0,0,0,0,0,0,0.5
+State management base store,Setup,5.5,0,1,4,0,0,0,0,0,0,0,0.5
+API client + interceptors,Setup,5.5,0,1,4,0,0,0,0,0,0,0,0.5
+Env configs + secrets handling,Setup,3.5,0,1,2,0,0,0,0,0,0,0,0.5
+Login/Sign-up screens (phone/email),Auth & KYC-lite,15.5,8,1,4,0,0,0,0,0,0,2,0.5
+OTP verification / password reset flows,Auth & KYC-lite,13,0,0,10,0,0,0,2,0,0,0.5,0.5
+Token auth + secure storage,Auth & KYC-lite,9.5,0,0,8,0,0,0,1,0,0,0,0.5
+Session persistence + logout + refresh token flow,Auth & KYC-lite,10.7,0,0,8,0,0,0,2,0,0,0.2,0.5
+Dashboard: current balance + due bills + quick actions,Core Billing,25.5,10,0,10,0,0,0,3,0,0,2,0.5
+"Bills list screen (by provider, due date, status)",Core Billing,19.5,8,0,8,0,0,0,2,0,0,1,0.5
+"Bill details screen (meter, period, amount, breakdown)",Core Billing,21.5,8,0,10,0,0,0,2,0,0,1,0.5
+Provider management (add/remove utility accounts),Core Billing,19.5,6,0,10,0,0,0,2,0,0,1,0.5
+Meter readings input (manual entry) + validation,Core Billing,21.5,6,0,12,0,0,0,2,0,0,1,0.5
+Generate bill preview from readings (client-side calc stub),Core Billing,13,0,0,10,0,0,0,2,0,0,0.5,0.5
+Payment flow UI (choose bill â amount â confirm),Payments,24.5,10,0,10,0,0,0,3,0,0,1,0.5
+Integrate payment gateway SDK (Apple Pay / Google Pay / cards),Payments,23,0,0,18,0,0,0,4,0,0,0.5,0.5
+3DS / payment authentication handling + edge cases,Payments,19,0,0,14,0,0,0,4,0,0,0.5,0.5
+Payment status screen (success/fail/pending) + receipt view,Payments,19.5,6,0,10,0,0,0,2,0,0,1,0.5
+Transaction history screen + filters,Payments,21.5,8,0,10,0,0,0,2,0,0,1,0.5
+Save payment methods (tokenized) + manage list,Payments,21.5,6,0,12,0,0,0,2,0,0,1,0.5
+Push notifications setup + token register,Notifications,17.7,0,0,14,0,0,0,3,0,0,0.2,0.5
+Bill reminders (due soon / overdue) + deep links,Notifications,17.7,4,0,10,0,0,0,3,0,0,0.2,0.5
+Offline caching of last bills/receipts (read-only),Offline & Security,12.7,0,0,10,0,0,0,2,0,0,0.2,0.5
+"Security hardening (biometric lock, secure screens)",Offline & Security,18.7,4,0,12,0,0,0,2,0,0,0.2,0.5
+PII-safe logging + privacy controls,Offline & Security,8.7,0,0,6,0,0,0,2,0,0,0.2,0.5
+Global error handling + loaders + empty states,Quality,22.8,8,0,10,0,0,0,4,0,0,0.3,0.5
+"Basic analytics events (bill viewed, payment started/completed)",Quality,7.7,0,0,6,0,0,0,1,0,0,0.2,0.5
+Crash reporting setup (Sentry/Firebase),Quality,4.7,0,0,3,0,0,0,1,0,0,0.2,0.5
+QA pass + bug fixing buffer,QA & Release,30,0,0,0,0,0,0,28,0,0,0,2
+"Store-ready config (icons, splash, permissions, privacy policy links)",QA & Release,16,4,0,8,0,0,0,3,0,0,0.5,0.5
+Release candidate build + handover docs,QA & Release,14,0,0,4,0,0,0,2,0,0,6,2
+Change password screen & logic,User Profile,14,4,2,3,2,0,1,0,0,0,1.5,0.5
+Forgot password flow (email link),User Profile,19.5,3,4,3,2,2,1,0,1,1,0.5,2
+"Edit profile details (name, phone)",User Profile,17.5,4,2,3,2,2,1,0,0,1,1.5,1
+Biometric login (FaceID/TouchID) integration,User Profile,13,3,5,0,0,0,1,0,0,2,1.5,0.5
+App theme settings (Dark/Light mode) toggle,User Profile,13,4,4,0,0,0,1,0,1,2,0.5,0.5
+Language localization setup,User Profile,11.5,3,2,0,0,0,1,0,1,2,1.5,1
+Terms of Service & Privacy Policy static pages,User Profile,15.5,4,4,0,0,0,2,0,1,3,0.5,1
+Delete account request & logic,User Profile,15.5,2,3,2,2,0,2,0,1,2,1,0.5
+Monthly spending bar chart component,Analytics,15.5,5,3,0,0,0,2,0,1,2,1.5,1
+Spending category breakdown (Pie chart),Analytics,12,2,3,0,0,0,2,0,1,2,1,1
+Backend aggregation for monthly stats,Analytics,11.5,0,0,3,3,1,1,0,0.5,0,1,2
+Year-over-year comparison logic,Analytics,17.5,0,0,3,6,3,2,0,0.5,0,1,2
+Export transaction history to PDF,Analytics,20.5,3,4,4,3,1,1,0,1,1,0.5,2
+Usage trends analysis (units consumed),Analytics,20,3,4,4,3,1,2,0,1,0,1.5,0.5
+Search providers screen with autocomplete,Provider Management,18,5,5,0,0,0,2,0,0.5,3,0.5,2
+Backend API for provider search,Provider Management,13.5,0,0,2,4,2,1,0,1,0,1.5,2
+Manual bill entry form,Provider Management,12,2,5,0,0,0,2,0,0.5,1,1,0.5
+Scan QR code on bill (camera integration),Provider Management,12,2,4,0,0,0,1,0,0.5,2,1.5,1
+Update provider credentials flow,Provider Management,18.5,3,3,2,4,1,1,0,1,1,0.5,2
+Unlink provider logic,Provider Management,12,0,0,2,4,1,1,0,0.5,0,1.5,2
+FAQ list screen & data structure,Support,16.5,5,5,0,0,0,1,0,0,3,1.5,1
+Contact support form,Support,12.5,4,5,0,0,0,1,0,0,1,0.5,1
+Backend for support ticket creation,Support,13.5,0,0,2,6,1,2,0,0.5,0,1.5,0.5
+Intercom/Chat widget integration,Support,14,4,3,0,0,0,1,0,1,3,1,1
+Onboarding tutorial slider (first launch),Support,17,5,5,0,0,0,2,0,0.5,2,0.5,2
+Admin portal login page,Admin Panel,11.5,3,2,0,0,0,2,0,0.5,3,0.5,0.5
+Admin dashboard overview,Admin Panel,12,2,3,0,0,0,2,0,0.5,2,1.5,1
+"User management table (list, search)",Admin Panel,19.5,2,3,4,3,1,2,0,1,1,0.5,2
+User details view (admin),Admin Panel,19.5,4,2,4,3,0,1,0,0.5,2,1,2
+Provider management (CRUD),Admin Panel,15,2,4,2,2,0,2,0,1,1,0.5,0.5
+View system logs interface,Admin Panel,10,2,2,0,0,0,2,0,0.5,1,0.5,2
+Log aggregation API endpoints,Admin Panel,16,0,0,2,7,1,2,0,0.5,0,1.5,2
+Broadcast push notification tool,Admin Panel,20,2,4,3,3,1,1,0,1,2,1,2
+Admin role permission management,Admin Panel,12.5,0,0,4,4,1,1,0,0,0,0.5,2
+CI/CD pipeline setup (GitHub Actions),Infrastructure,13.5,0,0,0,8,0,2,0,0,0,2.5,1
+Staging environment configuration,Infrastructure,8,0,0,0,4,0,1,0,1,0,1.5,0.5
+Production environment setup (AWS),Infrastructure,9.5,0,0,0,6,0,1,0,0,0,1.5,1
+Database backup & restore scripts,Infrastructure,9,0,0,0,4,0,1,0,0,0,3.5,0.5
+Monitoring setup (Sentry/Datadog),Infrastructure,13.5,0,0,0,7,0,2,0,0,0,3.5,1
+Email service integration (SendGrid/SES),Integration,13.5,0,0,5,4,2,1,0,0.5,0,0.5,0.5
+SMS gateway integration (Twilio),Integration,13,0,0,4,4,2,1,0,0.5,0,1,0.5
+Google Maps API for service locations,Integration,13.5,4,3,0,0,0,2,0,1,2,1,0.5
+Social Login (Google),Integration,17.5,3,2,4,3,1,1,0,1,0,0.5,2
+Social Login (Apple),Integration,16,2,3,2,2,2,2,0,0,2,0.5,0.5
+API Rate limiting implementation,Security,13.5,0,0,5,4,1,1,0,0.5,0,1.5,0.5
+Input validation & sanitization review,Security,11.5,0,0,2,3,2,1,0,0,0,1.5,2
+JWT token refresh mechanism,Security,15,0,0,2,6,3,2,0,0.5,0,0.5,1
+Data encryption for sensitive fields,Security,11,0,0,3,4,1,1,0,0,0,1,1
+Animation & Transitions for navigation,Polish,14,3,5,0,0,0,2,0,0,2,1,1
+Accessibility improvements (aria labels),Polish,15.5,3,5,0,0,0,2,0,1,2,0.5,2
+Tablet responsiveness adjustments,Polish,14.5,5,3,0,0,0,2,0,0,3,0.5,1
+Loading states & skeletons for all screens,Polish,9,2,2,0,0,0,1,0,0,1,1,2
+Error handling & empty states UI,Polish,16,5,5,0,0,0,2,0,1,1,1,1
+Unit tests for calculation logic,Testing,13,0,0,0,0,0,8,4,0,0,0.5,0.5
+Integration tests for payment flow,Testing,12,0,0,0,0,0,5,4,0,0,1,2
+E2E tests (Cypress/Detox) setup,Testing,14,0,0,0,0,0,10,3,0,0,0.5,0.5
+E2E critical path coverage,Testing,10,0,0,0,0,0,4,4,0,0,1.5,0.5
+Performance profiling & optimization,Testing,14.5,0,0,0,0,0,11,2,0,0,0.5,1
+Security audit & fix,Testing,8.5,0,0,0,0,0,7,0,0,0,0.5,1
+App Store screenshots & metadata,Release,9.5,0,0,0,0,0,0,0,3,0,4.5,2
+Google Play Store submission prep,Release,11,0,0,0,0,0,0,0,3,0,7.5,0.5
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,

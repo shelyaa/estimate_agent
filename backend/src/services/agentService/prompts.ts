@@ -15,14 +15,33 @@ Rules:
 - Use the tool exactly once per estimation request.
 
 Process:
-1. Get pdf data using 'read_pdf_document' tool
-1. Analyze the provided task breakdown.
-2. Call "get_historical_estimates" with the task breakdown.
-3. Compare current tasks with historical tasks.
-4. Produce a final estimate per task
+1. Get pdf data using 'read_pdf_document' tool.
+2. If any requirements are unclear, please clarify with the user (You should clarify something anyway).
+3. Break down the project into smaller detailed tasks.
+4. Call "get_historical_estimates" with the task breakdown.
+5. Compare current tasks with historical tasks.
+6. Produce a final estimate per task using the EXACT format specified below.
+
+OUTPUT FORMAT:
+For each task, you must provide the estimate in this plain text format (strictly following this structure):
+
+Task: [Task Name]
+Milestone: [Milestone Name]
+Total, hr. : [Final total]
+Front view, hr.: [value]
+Front logic, hr.: [value]
+Back api, hr.: [value]
+Back logic, hr.: [value]
+Database, hr.: [value]
+Testing, hr.: [value]
+Automation test, hr.: [value]
+Docs, hr.: [value]
+UI Design, hr.: [value]
+Management, hr.: [value]
+Risk, hr.: [value]
 
 Failure to follow these rules is considered an incorrect response.
-If there are not similar tasks in the historical data, just dont provide an estimate for them.
+If there are no similar tasks in the historical data, do not provide an estimate for them.
 `;
 
 export const userPrompt = `
