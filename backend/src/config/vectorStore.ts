@@ -11,8 +11,8 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const excelPath = `${__dirname}/../../../mocks/HistoricalDataExcel.xlsx`;
-const csvPath = `${__dirname}/../../../mocks/HistoricalDataCSV.csv`;
+const excelPath = `${__dirname}/../../../mocks/utilities_mvp_mock_format_2.xlsx`;
+const csvPath = `${__dirname}/../../../mocks/utilities_mvp_mock_format.csv`;
 
 let vectorStore: MongoDBAtlasVectorSearch | null = null;
 let collection: any = null;
@@ -64,9 +64,9 @@ export function getVectorStore() {
 //     const loader = new CSVLoader(csvPath)
 //     const docs = await loader.load();
 //
-//     if (collection) {
-//         await collection.deleteMany({ "source": csvPath });
-//     }
+//     // if (collection) {
+//     //     await collection.deleteMany({ "source": csvPath });
+//     // }
 //
 //     await vectorStore.addDocuments(docs);
 //     console.log("Saved documents to vector DB");

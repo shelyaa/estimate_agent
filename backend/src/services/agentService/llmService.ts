@@ -21,38 +21,13 @@ const googleGenAI = new ChatGoogleGenerativeAI({
 const agent = createDeepAgent({
     model: googleGenAI,
     tools: [getHistoricalEstimatesTool],
-    systemPrompt: testSystemPrompt,
+    systemPrompt: testSystemPrompt
 });
 
-// async function* fakeAgentStream() {
-//     yield {
-//         event: "on_chat_model_stream",
-//         data: { chunk: { content: "Hello " } },
-//     };
-//
-//     await new Promise(r => setTimeout(r, 300));
-//
-//     yield {
-//         event: "on_chat_model_stream",
-//         data: { chunk: { content: "this is " } },
-//     };
-//
-//     await new Promise(r => setTimeout(r, 300));
-//
-//     yield {
-//         event: "on_chat_model_stream",
-//         data: { chunk: { content: "a fake stream ✅" } },
-//     };
-//
-//     yield { event: "on_chain_end" };
-// }
+export async function runAgent(message: IMessage) {
+    const result = await agent.invoke({
+        messages: [{ role: "user", content: userPrompt }],
+    });
 
-// export function runAgent(_message: IMessage) {
-//     return fakeAgentStream();
-// }
-
-export function runAgent(message: IMessage) {
-    return agent.stream({
-        messages: [{role: "user", content: userPrompt}],
-    })
+    return result.messages[result.messages.length - 1].content;
 }
