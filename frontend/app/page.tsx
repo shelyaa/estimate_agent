@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {ArrowUpIcon, Plus} from "lucide-react";
+import {uploadPdf} from "@/api/uploadPdf";
 
 type Message = {
   role: "user" | "agent";
@@ -15,9 +16,9 @@ export default function Page() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [pdfFile, setPdfFile] = useState<File | null>(null);
-  const [pdfStatus, setPdfStatus] = useState<"idle" | "uploaded" | "parsed">(
-    "idle"
-  );
+  const [pdfStatus, setPdfStatus] = useState<
+    "idle" | "uploading" | "parsed" | "error"
+  >("idle");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -44,17 +45,28 @@ export default function Page() {
   }
   const canSend = input.trim().length > 0;
 
-  function handlePdfUpload(file: File) {
-    setPdfFile(file);
-    setPdfStatus("uploaded");
+  async function handlePdfUpload(file: File) {
+    try {
+      setPdfFile(file);
+      setPdfStatus("uploading");
 
-    setTimeout(() => {
+      const result = await uploadPdf(file);
+
+      console.log("PDF result:", result);
+
       setPdfStatus("parsed");
-    }, 1000);
+    } catch (error) {
+      console.error("Error uploading PDF:", error);
+      setPdfFile(null);
+      setPdfStatus("idle");
+    }
   }
 
   function removePdf() {
     setPdfFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   }
 
   return (
@@ -92,7 +104,7 @@ export default function Page() {
                 {pdfFile.name}
               </span>
 
-              {pdfStatus === "uploaded" && (
+              {pdfStatus === "uploading" && (
                 <span className="ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-700">
                   Processing...
                 </span>
