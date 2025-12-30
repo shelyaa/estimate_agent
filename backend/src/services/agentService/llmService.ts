@@ -1,33 +1,46 @@
 import {createDeepAgent} from "deepagents";
-import {ChatGoogleGenerativeAI} from "@langchain/google-genai";
+import { MemorySaver } from "@langchain/langgraph";
+import {z} from "zod";
 import type {IMessage} from "../../models/Message.js";
-import dotenv from "dotenv"
-import {getHistoricalEstimatesTool} from "./tools.js";
-import {testSystemPrompt, userPrompt} from "./prompts.js";
+import dotenv from "dotenv";
+import { llmModel } from "../../config/llm.js";
+import {getHistoricalEstimatesTool, pdfReaderTool} from "./tools.js";
+import {testSystemPrompt} from "./prompts.js";
+import {MongoDBSaver} from "@langchain/langgraph-checkpoint-mongodb";
+import {getMongoClient} from "../../config/db.js";
 dotenv.config()
 
-const googleApiKey = process.env.GOOGLE_API_KEY;
+let agent: any | null = null;
 
-if(!googleApiKey) {
-    throw new Error("GOOGLE_API_KEY not set");
-}
+const agentSetup = async () => {
+    if(agent) return agent;
 
-const googleGenAI = new ChatGoogleGenerativeAI({
-    apiKey: googleApiKey,
-    temperature: 0,
-    model: "gemini-2.5-flash",
-});
+    const client = await getMongoClient();
+    // @ts-ignore
+    const checkpointer = new MongoDBSaver({ client });
 
-const agent = createDeepAgent({
-    model: googleGenAI,
-    tools: [getHistoricalEstimatesTool],
-    systemPrompt: testSystemPrompt
-});
-
-export async function runAgent(message: IMessage) {
-    const result = await agent.invoke({
-        messages: [{ role: "user", content: userPrompt }],
+    agent = createDeepAgent({
+        model: llmModel(),
+        tools: [getHistoricalEstimatesTool, pdfReaderTool],
+        systemPrompt: testSystemPrompt,
+        checkpointer,
     });
 
-    return result.messages[result.messages.length - 1].content;
+    return agent;
+}
+
+export async function runAgent(message: IMessage) {
+
+    const agent = await agentSetup();
+
+    const config = { configurable: { thread_id: message.chatId } };
+
+    const result = await agent.invoke({
+        messages: [
+          {role: message.sender, content: message.content},
+          {role: message.sender, content: message.attachedFiles ?? ''},
+        ],
+    }, config);
+
+    return result.messages[result.messages.length - 1]?.content;
 }
