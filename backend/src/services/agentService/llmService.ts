@@ -1,6 +1,5 @@
 import {createDeepAgent} from "deepagents";
 import { MemorySaver } from "@langchain/langgraph";
-import {z} from "zod";
 import type {IMessage} from "../../models/Message.js";
 import dotenv from "dotenv";
 import { llmModel } from "../../config/llm.js";
@@ -27,21 +26,6 @@ export async function runAgent(message: IMessage) {
           {role: message.sender, content: message.attachedFiles},
         ],
     }, config);
-
+    console.log(result.messages[result.messages.length - 1].content)
     return result.messages[result.messages.length - 1].content;
 }
-
-const RequirementsAnalysisSchema = z.object({
-  requirements: z.array(
-    z.object({
-      id: z.string(),
-      text: z.string(),
-      clarity: z.enum(["clear", "unclear"]),
-      missingInfo: z.array(z.string()),
-    })
-  ),
-  clarificationQuestions: z.array(z.string()),
-});
-
-
-
