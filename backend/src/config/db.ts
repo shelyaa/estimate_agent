@@ -2,9 +2,9 @@ import mongoose from "mongoose"
 import dotenv from "dotenv"
 dotenv.config()
 
-export async function connectDB() {
-    const mongoURI = process.env.MONGO_URI;
+const mongoURI = process.env.MONGO_URI;
 
+export async function connectDB() {
     if(!mongoURI) {
         throw new Error("MONGO_URI is not defined in environment variables");
     }
@@ -16,4 +16,8 @@ export async function connectDB() {
         console.error("Error connecting to MongoDB:", error);
         throw error;
     }
+}
+
+export async function getMongoClient() {
+    return mongoose.connection.getClient();
 }

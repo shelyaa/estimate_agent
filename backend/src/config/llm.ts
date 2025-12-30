@@ -10,6 +10,7 @@ if(!googleApiKey) {
   console.warn("GOOGLE_API_KEY not set");
 } else if (!openAiApiKey){
   console.warn("OPENAI_API_KEY not set");
+  throw new Error("No API keys for LLMs are set");
 }
 
 export const llmModel = () => {
