@@ -47,9 +47,8 @@ async function getSimilarHistoricalEstimates({tasksBreakDown}: {tasksBreakDown: 
 async function getDataFromPdf({filePath}: {filePath: string}) {
   try {
     const data = await processPdf(filePath);
-    const result = data[0]?.pageContent;
 
-    return result || "The file is empty or the text could not be recognized.";
+    return data || "The file is empty or the text could not be recognized.";
   } catch (error) {
     return `Error while reading PDF: ${error instanceof Error ? error.message : String(error)}`;
   }
