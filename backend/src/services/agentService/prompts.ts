@@ -88,7 +88,20 @@ ESTIMATION_OUTPUT_FORMAT
     {
       "task": "...",
       "milestone": "...",
-      "estimate_hours": { ... },
+      "estimate_hours": {
+        "total": 0,
+        "front_view": 0,
+        "front_logic": 0,
+        "back_api": 0,
+        "back_logic": 0,
+        "database": 0,
+        "testing": 0,
+        "automation_test": 0,
+        "docs": 0,
+        "ui_design": 0,
+        "management": 0,
+        "risk": 0
+      },
       "historical_reference": "..."
     }
   ],

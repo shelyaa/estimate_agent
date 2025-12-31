@@ -9,11 +9,12 @@ export async function sendMessageToAgent(message: IMessage) {
     const agentMessage: IMessage = {
         chatId: message.chatId,
         sender: 'agent',
-        content: response?.toString() || 'Sorry, I could not process your request.',
+        content: response.toString() || 'Sorry, I could not process your request.',
         attachedFiles: null
     }
 
-    return Message.create(agentMessage);
+    await Message.create(agentMessage);
+    return JSON.parse(response);
 }
 
 export async function getAllMessages(chatId: string) {
