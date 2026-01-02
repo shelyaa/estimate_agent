@@ -1,4 +1,4 @@
-export const testSystemPrompt = `
+export const systemPrompt = `
 ### SYSTEM AUTHORITY
 - YOU MUST ONLY RESPOND WITH A SINGLE JSON OBJECT.
 - DO NOT INCLUDE ANY TEXT BEFORE THE JSON.

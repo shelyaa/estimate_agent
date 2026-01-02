@@ -3,7 +3,7 @@ import type {IMessage} from "../../models/Message.js";
 import dotenv from "dotenv";
 import { llmModel } from "../../config/llm.js";
 import {getHistoricalEstimatesTool, pdfReaderTool} from "./tools.js";
-import {testSystemPrompt} from "./prompts.js";
+import {systemPrompt} from "./prompts.js";
 import {MongoDBSaver} from "@langchain/langgraph-checkpoint-mongodb";
 import {getMongoClient} from "../../config/db.js";
 dotenv.config()
@@ -20,7 +20,7 @@ const agentSetup = async () => {
     agent = createDeepAgent({
         model: llmModel(),
         tools: [getHistoricalEstimatesTool, pdfReaderTool],
-        systemPrompt: testSystemPrompt,
+        systemPrompt: systemPrompt,
         checkpointer,
     });
 
@@ -39,6 +39,5 @@ export async function runAgent(message: IMessage) {
           {role: message.sender, content: message.attachedFiles ?? ''},
         ],
     }, config);
-    console.log(result.messages[result.messages.length - 1]?.content)
     return result.messages[result.messages.length - 1]?.content;
 }
