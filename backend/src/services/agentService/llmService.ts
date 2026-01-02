@@ -42,20 +42,3 @@ export async function runAgent(message: IMessage) {
     console.log(result.messages[result.messages.length - 1]?.content)
     return result.messages[result.messages.length - 1]?.content;
 }
-
-export async function runAgentWithStream(message: IMessage) {
-    const agent = await agentSetup();
-
-    const config = { configurable: { thread_id: message.chatId }, streamMode: "messages" };
-
-    for await (const [token, metadata] of await agent.stream({
-        messages: [
-            {role: message.sender, content: message.content},
-            {role: message.sender, content: message.attachedFiles ?? ''},
-        ],
-    }, config)) {
-        if(token.content.trim().length > 0) {
-
-        }
-    }
-}
