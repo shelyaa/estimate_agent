@@ -159,7 +159,7 @@ export default function Page() {
             {messages.map((msg, idx) => (
                 <div
                     key={msg._id ?? idx}
-                    className={`px-4 py-2 rounded-xl max-w-[80%] ${
+                    className={`px-4 py-2 rounded-xl max-w-[80%] whitespace-pre-wrap ${
                         msg.sender === "user" ? "bg-gray-200 ml-auto" : "bg-gray-100"
                     }`}
                 >
@@ -225,7 +225,10 @@ export default function Page() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter") handleSend();
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend()
+                }
               }}
               placeholder="Ask something..."
             />
