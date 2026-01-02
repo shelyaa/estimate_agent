@@ -18,3 +18,4 @@ export const sendMessage = async (chatId: string, message: string, file?: File) 
   });
   return res.data;
 };
+

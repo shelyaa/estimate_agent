@@ -21,3 +21,7 @@ export async function getAllMessages(chatId: string) {
     chatId,
   }).sort({createdAt: 1});
 }
+
+export const getMessageById = async (messageId: string) => {
+  return Message.findById(messageId);
+}
