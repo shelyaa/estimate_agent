@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5000/api/messages";
+const BASE_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/messages`
 
 export const getMessages = async (chatId: string) => {
   const res = await axios.get(`${BASE_URL}/${chatId}`);
