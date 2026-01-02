@@ -29,13 +29,15 @@ async function getSimilarHistoricalEstimates({tasksBreakDown}: {tasksBreakDown: 
     let output = "";
 
     for (const task of tasksBreakDown) {
-        const result = await vectorStore.similaritySearch(task, 5);
+        const result = await vectorStore.similaritySearchWithScore(task, 5);
 
         output += `Task: ${task}\n`;
         output += `Similar historical tasks:\n`;
 
-        for (const doc of result) {
-            output += `- ${doc.pageContent}\n`;
+        for (const [doc, score] of result) {
+            if(score > 0.6) {
+                output += `- ${doc.pageContent}\n`;
+            }
         }
 
         output += `\n`;

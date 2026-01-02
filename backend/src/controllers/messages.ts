@@ -1,5 +1,5 @@
 import type {Request, Response} from "express";
-import {getAllMessages, sendMessageToAgent} from "../services/messagesService.js"
+import {getAllMessages, getMessageById, sendMessageToAgent} from "../services/messagesService.js"
 import type { IMessage } from "../models/Message.js";
 import {Types} from "mongoose";
 
@@ -33,4 +33,15 @@ export async function getMessages(req: Request, res: Response) {
     }
 }
 
+export async function downloadFileByMessageId(req: Request, res: Response) {
+    try {
+        const filePath = req?.query?.filePath as string;
 
+        if(!filePath) throw new Error("FilePath is required");
+
+        res.download(filePath);
+    }catch (err: any) {
+        console.log(err)
+        res.status(500).json({ message: err.message });
+    }
+}

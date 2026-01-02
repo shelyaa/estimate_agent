@@ -6,6 +6,8 @@ import {Button} from "@/components/ui/button";
 import {ArrowUpIcon, Plus} from "lucide-react";
 import {getChats, createChat, deleteChat} from "@/api/chat";
 import {getMessages, sendMessage} from "@/api/messages";
+import {FileDownload} from "@/components/FileDownload";
+import {AgentMessageView} from "@/components/ParsedMessage";
 
 type Message = {
   _id?: string;
@@ -22,6 +24,7 @@ export default function Page() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [attachedFile, setAttachedFile] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [fileStatus, setFileStatus] = useState<"idle" | "uploaded" | "parsed">(
     "idle"
   );
@@ -94,9 +97,11 @@ export default function Page() {
     };
 
     setMessages((prev) => [...prev, optimisticMessage]);
+    setAttachedFile(null);
     setInput("");
 
     try {
+      setIsLoading(true)
       const result = await sendMessage(
         activeChatId,
         input,
@@ -105,8 +110,10 @@ export default function Page() {
       setFileStatus("parsed");
       setMessages((prev) => [...prev, result]);
     } catch (err) {
+      setIsLoading(false)
       console.error(err);
     }
+    setIsLoading(false)
   }
 
   return (
@@ -150,15 +157,22 @@ export default function Page() {
             )}
 
             {messages.map((msg, idx) => (
-              <div
-                key={msg._id ?? idx}
-                className={`px-4 py-2 rounded-xl max-w-[80%] ${
-                  msg.sender === "user" ? "bg-gray-200 ml-auto" : "bg-gray-100"
-                }`}
-              >
-                {msg.content}
-              </div>
+                <div
+                    key={msg._id ?? idx}
+                    className={`px-4 py-2 rounded-xl max-w-[80%] ${
+                        msg.sender === "user" ? "bg-gray-200 ml-auto" : "bg-gray-100"
+                    }`}
+                >
+                  <div className="flex flex-col gap-2">
+                    {msg.attachedFiles && (
+                        <FileDownload filePath={msg.attachedFiles} />
+                    )}
+
+                    {msg.sender === 'agent' ? <AgentMessageView msg={JSON.parse(JSON.stringify(msg))} /> : msg.content}
+                  </div>
+                </div>
             ))}
+            {isLoading && 'Loading...'}
             <div ref={bottomRef} />
           </div>
 
