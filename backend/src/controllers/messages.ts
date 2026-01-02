@@ -6,6 +6,7 @@ import {Types} from "mongoose";
 export async function sendMessage(req: Request, res: Response) {
     try {
         const userMessage = req?.body?.message as string;
+        
         const chatId = req?.body?.chatId as Types.ObjectId;
         const file = req?.file?.path
 
@@ -16,6 +17,7 @@ export async function sendMessage(req: Request, res: Response) {
 
         res.json(result);
     } catch (err: any) {
+
         res.status(500).json({ message: err.message });
     }
 }

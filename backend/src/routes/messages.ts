@@ -5,7 +5,7 @@ import { upload } from "../middlewares/multer.js";
 const router = Router();
 
 router.post("/", upload.single("file"), sendMessage);
-router.get("/", getMessages);
+router.get("/:chatId", getMessages);
 
 export default router;
 

@@ -1,174 +1,231 @@
 "use client";
 
-import {useRef, useState} from "react";
-import ReactMarkdown from "react-markdown";
+import {useEffect, useRef, useState} from "react";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {ArrowUpIcon, Plus} from "lucide-react";
-import {uploadPdf} from "@/api/uploadPdf";
+import {getChats, createChat, deleteChat} from "@/api/chat";
+import {getMessages, sendMessage} from "@/api/messages";
 
 type Message = {
-  role: "user" | "agent";
+  _id?: string;
+  sender: "user" | "agent";
   content: string;
+  attachedFiles?: string | null;
 };
 
+type Chat = {_id: string; title: string};
+
 export default function Page() {
+  const [chats, setChats] = useState<Chat[]>([]);
+  const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  const [pdfFile, setPdfFile] = useState<File | null>(null);
-  const [pdfStatus, setPdfStatus] = useState<
-    "idle" | "uploading" | "parsed" | "error"
-  >("idle");
+  const [attachedFile, setAttachedFile] = useState<File | null>(null);
+  const [fileStatus, setFileStatus] = useState<"idle" | "uploaded" | "parsed">(
+    "idle"
+  );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
 
-  function sendMessage() {
-    if (!input.trim()) return;
+  const activeChat = chats.find((c) => c._id === activeChatId);
+  const canSend = (!!input.trim() || attachedFile) && !!activeChat;
 
-    const userMessage: Message = {
-      role: "user",
-      content: input,
-    };
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({behavior: "smooth"});
+  }, [messages]);
 
-    setMessages((prev) => [...prev, userMessage]);
-    setInput("");
+  useEffect(() => {
+    async function loadChats() {
+      const data = await getChats();
+      setChats(data);
+      if (data.length > 0) setActiveChatId(data[0]._id);
+    }
+    loadChats();
+  }, []);
 
-    setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "agent",
-          content: "pupupu",
-        },
-      ]);
-    }, 600);
-  }
-  const canSend = input.trim().length > 0;
+  useEffect(() => {
+    if (!activeChatId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setMessages([]);
+      return;
+    }
 
-  async function handlePdfUpload(file: File) {
+    async function loadMessages() {
+      try {
+        if (!activeChatId) return;
+        const data = await getMessages(activeChatId);
+        setMessages(data);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    loadMessages();
+  }, [activeChatId]);
+
+  async function handleCreateChat() {
     try {
-      setPdfFile(file);
-      setPdfStatus("uploading");
-
-      const result = await uploadPdf(file);
-
-      console.log("PDF result:", result);
-
-      setPdfStatus("parsed");
-    } catch (error) {
-      console.error("Error uploading PDF:", error);
-      setPdfFile(null);
-      setPdfStatus("idle");
+      const newChat = await createChat();
+      setChats((prev) => [...prev, {...newChat, title: "New Chat"}]);
+      setActiveChatId(newChat._id);
+    } catch (err) {
+      console.error(err);
     }
   }
 
-  function removePdf() {
-    setPdfFile(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+  async function handleDeleteChat(chatId: string) {
+    try {
+      await deleteChat(chatId);
+      setChats((prev) => prev.filter((c) => c._id !== chatId));
+      if (chatId === activeChatId) setActiveChatId(null);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function handleSend() {
+    if (!activeChatId || (!input.trim() && !attachedFile)) return;
+
+    const optimisticMessage: Message = {
+      sender: "user",
+      content: input,
+      attachedFiles: attachedFile?.name ?? null,
+    };
+
+    setMessages((prev) => [...prev, optimisticMessage]);
+    setInput("");
+
+    try {
+      const result = await sendMessage(
+        activeChatId,
+        input,
+        attachedFile ?? undefined
+      );
+      setFileStatus("parsed");
+      setMessages((prev) => [...prev, result]);
+    } catch (err) {
+      console.error(err);
     }
   }
 
   return (
-    <main className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
-      <div className="w-full max-w-3xl bg-white rounded-xl shadow p-4 flex flex-col gap-4">
-        <h1 className="text-xl font-semibold">Project Estimate Agent</h1>
+    <main className="h-screen flex overflow-hidden bg-gray-100">
+      <aside className="w-64 bg-white border-r p-4 space-y-3">
+        <Button className="w-full" onClick={handleCreateChat}>
+          + New chat
+        </Button>
 
-        <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-60">
-          {messages.length === 0 && (
-            <div className="text-gray-400 text-md text-center flex items-center justify-center min-h-50">
-              Start a conversation or upload a PDF
-            </div>
-          )}
-
-          {messages.map((msg, idx) => (
-            <div
-              key={idx}
-              className={`px-4 py-2 rounded-xl max-w-[80%] ${
-                msg.role === "user" ? "bg-gray-200 ml-auto" : "bg-gray-100"
-              }`}
-            >
-              {msg.role === "agent" ? (
-                <ReactMarkdown>{msg.content}</ReactMarkdown>
-              ) : (
-                msg.content
-              )}
-            </div>
-          ))}
-        </div>
-        {pdfFile && (
-          <div className="flex items-center justify-between border rounded-md px-3 py-2 text-sm">
-            <div className="flex items-center gap-2">
-              <span>📄</span>
-              <span className="font-medium truncate max-w-50">
-                {pdfFile.name}
-              </span>
-
-              {pdfStatus === "uploading" && (
-                <span className="ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-700">
-                  Processing...
-                </span>
-              )}
-
-              {pdfStatus === "parsed" && (
-                <span className="ml-2 rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700">
-                  Ready
-                </span>
-              )}
-            </div>
-
+        {chats.map((chat) => (
+          <div
+            key={chat._id}
+            onClick={() => setActiveChatId(chat._id)}
+            className={`flex justify-between items-center px-3 py-2 rounded cursor-pointer ${
+              chat._id === activeChatId ? "bg-gray-200" : "hover:bg-gray-100"
+            }`}
+          >
+            <span className="truncate">{chat._id}</span>
             <button
-              onClick={removePdf}
-              className="text-gray-400 hover:text-gray-700 transition"
-              aria-label="Remove PDF"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteChat(chat._id);
+              }}
+              className="text-gray-400 hover:text-red-500"
             >
               ✕
             </button>
           </div>
-        )}
+        ))}
+      </aside>
 
-        <div className="flex gap-2">
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="application/pdf"
-            className="hidden"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) handlePdfUpload(file);
-            }}
-          />
+      <section className="flex-1 p-6 flex justify-center">
+        <div className="w-full max-w-5xl bg-white rounded-xl shadow p-4 flex flex-col gap-4">
+          <h1 className="text-xl font-semibold">Project Estimate Agent</h1>
 
-          <Button
-            variant="outline"
-            size="icon"
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <Plus />
-          </Button>
+          <div className="flex-1 overflow-y-auto p-4 space-y-3 max-h-20vh items-center justify-center">
+            {!activeChatId && (
+              <div className="text-gray-400 text-center">
+                Create or select a chat
+              </div>
+            )}
 
-          <Input
-            type="text"
-            placeholder="Ask something..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && canSend) sendMessage();
-            }}
-          />
+            {messages.map((msg, idx) => (
+              <div
+                key={msg._id ?? idx}
+                className={`px-4 py-2 rounded-xl max-w-[80%] ${
+                  msg.sender === "user" ? "bg-gray-200 ml-auto" : "bg-gray-100"
+                }`}
+              >
+                {msg.content}
+              </div>
+            ))}
+            <div ref={bottomRef} />
+          </div>
 
-          <Button
-            variant="outline"
-            size="icon"
-            aria-label="Submit"
-            onClick={sendMessage}
-            disabled={!canSend}
-          >
-            <ArrowUpIcon />
-          </Button>
+          {attachedFile && (
+            <div className="flex justify-between items-center border rounded px-3 py-2 text-sm">
+              <div>
+                <span className="truncate">📄 {attachedFile.name}</span>
+                <span
+                  className={`ml-2 rounded-full px-2 py-0.5 text-xs ${
+                    fileStatus === "uploaded"
+                      ? "bg-gray-100"
+                      : "bg-green-100 text-green-700"
+                  }`}
+                >
+                  {fileStatus === "uploaded" ? "Uploaded" : "Parsed"}
+                </span>
+              </div>
+              <button
+                onClick={() => {
+                  setAttachedFile(null);
+                  if (fileInputRef.current) fileInputRef.current.value = "";
+                  setFileStatus("idle");
+                }}
+              >
+                ✕
+              </button>
+            </div>
+          )}
+
+          <div className="flex gap-2">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="application/pdf"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0] ?? null;
+                setAttachedFile(file);
+                setFileStatus("uploaded");
+              }}
+            />
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <Plus />
+            </Button>
+            <Input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSend();
+              }}
+              placeholder="Ask something..."
+            />
+            <Button
+              variant="outline"
+              size="icon"
+              disabled={!canSend}
+              onClick={handleSend}
+            >
+              <ArrowUpIcon />
+            </Button>
+          </div>
         </div>
-      </div>
+      </section>
     </main>
   );
 }

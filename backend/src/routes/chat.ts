@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createChat, getChats, deleteChat } from "../controllers/chat.js";
+import { createChat, deleteChat, getChats } from "../controllers/chat.js";
 
 const router = Router();
 
@@ -8,4 +8,3 @@ router.get("/", getChats);
 router.delete("/:chatId", deleteChat);
 
 export default router;
-
