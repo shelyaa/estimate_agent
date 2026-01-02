@@ -109,5 +109,4 @@ ESTIMATION_OUTPUT_FORMAT
 
 ### FINAL REMINDER: 
 You MUST call "get_historical_estimates" before providing the estimation JSON. If the final output contains anything other than the JSON object, it is a critical failure.
-You MUST call "get_historical_estimates" before providing the estimation JSON. If the final output contains anything other than the JSON object, it is a critical failure.
 `;
