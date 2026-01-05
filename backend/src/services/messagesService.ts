@@ -1,13 +1,17 @@
 import {type IMessage, Message} from "../models/Message.js";
 import {runAgent} from "./agentService/llmService.js";
+import type {IMessageWithId} from "../constants/ioHandlerTypes.js";
 
-export async function sendMessageToAgent(message: IMessage) {
-  await Message.create(message);
+export async function createUserMessage(message: IMessage) {
+  const newMessage = await Message.create(message);
+  return newMessage;
+}
 
-  const response = await runAgent(message);
+export async function processMessageWithAgent(userMessage: IMessage) {
+  const response = await runAgent(userMessage);
 
   const agentMessage: IMessage = {
-    chatId: message.chatId,
+    chatId: userMessage.chatId,
     sender: "agent",
     content: response?.toString() || "Sorry, I could not process your request.",
     attachedFiles: null,
@@ -15,7 +19,6 @@ export async function sendMessageToAgent(message: IMessage) {
 
   return Message.create(agentMessage);
 }
-
 export async function getAllMessages(chatId: string) {
   return Message.find({
     chatId,
