@@ -49,6 +49,8 @@ export default function Page() {
     const activeChat = chats.find((c) => c._id === activeChatId);
     const canSend = (!!input.trim() || uploadedFilePath) && !!activeChat && !isLoading;
 
+    const inputRef = useRef<HTMLTextAreaElement | null>(null);
+
     useEffect(() => {
         bottomRef.current?.scrollIntoView({behavior: "smooth"});
     }, [messages]);
@@ -140,6 +142,11 @@ export default function Page() {
             setMessages((prev) => [...prev, userMessage]);
 
             setInput("");
+
+            if (inputRef.current) {
+                inputRef.current.style.height = "auto";
+            }
+
             setAttachedFile(null);
             setUploadedFilePath(null);
             setFileStatus("idle");
@@ -269,6 +276,7 @@ export default function Page() {
                             <Plus/>
                         </Button>
                         <Input
+                            ref={inputRef}
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={(e) => {
