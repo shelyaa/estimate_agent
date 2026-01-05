@@ -1,6 +1,9 @@
+import { FileDownload } from "./FileDownload";
+
 interface AgentMessage {
 	status: string;
 	message?: string;
+  attached_file?: string;
 	tasks?: {
 		task: string;
 		milestone: string;
@@ -92,6 +95,9 @@ export const AgentMessageView = ({ msg }: MessageProps) => {
 							<span className="font-semibold">{data.confidence}</span>
 						</div>
 					)}
+          {data.attached_file && (
+            <FileDownload filePath={data.attached_file} />
+          )}
 				</div>
 			);
 

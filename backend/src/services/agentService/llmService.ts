@@ -2,7 +2,7 @@ import { createDeepAgent } from "deepagents";
 import type { IMessage } from "../../models/Message.js";
 import dotenv from "dotenv";
 import { llmModel } from "../../config/llm.js";
-import { getHistoricalEstimatesTool, pdfReaderTool } from "./tools.js";
+import { createExcelTool, getHistoricalEstimatesTool, pdfReaderTool } from "./tools.js";
 import { systemPrompt } from "./prompts.js";
 import { MongoDBSaver } from "@langchain/langgraph-checkpoint-mongodb";
 import { getMongoClient } from "../../config/db.js";
@@ -19,7 +19,7 @@ const agentSetup = async () => {
 
 	agent = createDeepAgent({
 		model: llmModel(),
-		tools: [getHistoricalEstimatesTool, pdfReaderTool],
+		tools: [getHistoricalEstimatesTool, pdfReaderTool, createExcelTool],
 		systemPrompt: systemPrompt,
 		checkpointer,
 	});

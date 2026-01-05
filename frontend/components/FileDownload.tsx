@@ -3,7 +3,7 @@ export const FileDownload = ({ filePath }: { filePath: string }) => {
 
 	return (
 		<a
-			href={`http://localhost:5000/api/messages/download?filePath=${filePath}`}
+			href={`${process.env.NEXT_PUBLIC_API_URL}/api/messages/download?filePath=${filePath}`}
 			rel="noopener noreferrer"
 			className="flex items-center gap-3 p-3 rounded-lg border bg-white hover:bg-gray-50 transition"
 		>
