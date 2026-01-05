@@ -3,7 +3,6 @@ import { z } from "zod";
 import { getVectorStore } from "../../config/vectorStore.js";
 import { processPdf } from "../pdfService.js";
 import ExcelJS from 'exceljs';
-import { estimationResponse } from "./responses.js";
 import path from "path";
 import fs from 'fs';
 import { dirname } from 'node:path';
@@ -76,8 +75,8 @@ async function getSimilarHistoricalEstimates({
 		output += `Similar historical tasks:\n`;
 
 		for (const [doc, score] of result) {
-			if (score > 0.6) {
-				output += `- ${doc.pageContent}\n`;
+			if (score > 0.7) {
+                output += `- Content: ${doc.pageContent}\nScore: ${score}\n\n`;
 			}
 		}
 

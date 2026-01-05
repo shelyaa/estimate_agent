@@ -1,9 +1,5 @@
-import type { Request, Response } from "express";
-import {
-	getAllMessages,
-	getMessageById,
-	sendMessageToAgent,
-} from "../services/messagesService.js";
+import type {Request, Response} from "express";
+import {getAllMessages, getMessageById, sendMessageToAgent} from "../services/messagesService.js"
 import type { IMessage } from "../models/Message.js";
 import { Types } from "mongoose";
 
