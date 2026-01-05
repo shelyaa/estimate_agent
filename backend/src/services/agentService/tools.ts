@@ -1,57 +1,63 @@
-import {tool} from "langchain";
-import {z} from "zod";
-import {getVectorStore} from "../../config/vectorStore.js";
+import { tool } from "langchain";
+import { z } from "zod";
+import { getVectorStore } from "../../config/vectorStore.js";
 import { processPdf } from "../pdfService.js";
 
-export const getHistoricalEstimatesTool = tool(
-    getSimilarHistoricalEstimates,
-    {
-        name: "get_historical_estimates",
-        description: "Get historical estimates for similar tasks",
-        schema: z.object({
-            tasksBreakDown: z.string().array().describe("List of tasks to get similar historical estimates for"),
-        }),
-    }
-)
-
-export const pdfReaderTool = tool(getDataFromPdf, {
-  name: "read_pdf_document",
-  description: "Use this tool to read the contents of a PDF file. The path to the file is accepted as input.",
-    schema: z.object({
-        filePath: z.string().describe("Provided pdf path"),
-    }),
+export const getHistoricalEstimatesTool = tool(getSimilarHistoricalEstimates, {
+	name: "get_historical_estimates",
+	description: "Get historical estimates for similar tasks",
+	schema: z.object({
+		tasksBreakDown: z
+			.string()
+			.array()
+			.describe("List of tasks to get similar historical estimates for"),
+	}),
 });
 
+export const pdfReaderTool = tool(getDataFromPdf, {
+	name: "read_pdf_document",
+	description:
+		"Use this tool to read the contents of a PDF file. The path to the file is accepted as input.",
+	schema: z.object({
+		filePath: z.string().describe("Provided pdf path"),
+	}),
+});
 
-async function getSimilarHistoricalEstimates({tasksBreakDown}: {tasksBreakDown: string[]}) {
-    const { vectorStore } = getVectorStore();
+async function getSimilarHistoricalEstimates({
+	tasksBreakDown,
+}: {
+	tasksBreakDown: string[];
+}) {
+	const { vectorStore } = getVectorStore();
 
-    let output = "";
+	let output = "";
 
-    for (const task of tasksBreakDown) {
-        const result = await vectorStore.similaritySearchWithScore(task, 5);
+	for (const task of tasksBreakDown) {
+		const result = await vectorStore.similaritySearchWithScore(task, 5);
 
-        output += `Task: ${task}\n`;
-        output += `Similar historical tasks:\n`;
+		output += `Task: ${task}\n`;
+		output += `Similar historical tasks:\n`;
 
-        for (const [doc, score] of result) {
-            if(score > 0.6) {
-                output += `- ${doc.pageContent}\n`;
-            }
-        }
+		for (const [doc, score] of result) {
+			if (score > 0.6) {
+				output += `- ${doc.pageContent}\n`;
+			}
+		}
 
-        output += `\n`;
-    }
+		output += `\n`;
+	}
 
-    return output;
+	return output;
 }
 
-async function getDataFromPdf({filePath}: {filePath: string}) {
-  try {
-    const data = await processPdf(filePath);
+async function getDataFromPdf({ filePath }: { filePath: string }) {
+	try {
+		const data = await processPdf(filePath);
 
-    return data || "The file is empty or the text could not be recognized.";
-  } catch (error) {
-    return `Error while reading PDF: ${error instanceof Error ? error.message : String(error)}`;
-  }
+		return data || "The file is empty or the text could not be recognized.";
+	} catch (error) {
+		return `Error while reading PDF: ${
+			error instanceof Error ? error.message : String(error)
+		}`;
+	}
 }
