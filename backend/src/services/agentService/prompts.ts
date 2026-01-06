@@ -60,6 +60,7 @@ STEP 3B: IF requirements ARE complete and clear
 2. EXECUTE TOOL: Call "get_historical_estimates" for the entire task list. This is a hard requirement.
 3. WAIT FOR DATA: Only after receiving the response from "get_historical_estimates", map the data to the current tasks.
 4. FINAL OUTPUT: Produce the "ESTIMATION_OUTPUT_FORMAT" JSON using ONLY the data retrieved from the tool.
+5. Create Excele file using "create_excel" tool, write response to "attached_file".
 
 ====================
 CLARIFICATION_OUTPUT_FORMAT
@@ -104,7 +105,8 @@ ESTIMATION_OUTPUT_FORMAT
     }
   ],
   "confidence": "low | medium | high",
-  "risks": ["..."]
+  "risks": ["..."],
+  "attached_file": "file path"
 }
 
 ### FINAL REMINDER: 
