@@ -1,6 +1,8 @@
 export const FileDownload = ({ filePath, fileStatus }: { filePath: string, fileStatus?: string }) => {
 	const fileName = filePath.split("/").pop();
 
+  console.log(fileStatus);
+  
 	return (
 		<a
 			href={`${process.env.NEXT_PUBLIC_API_URL}/api/messages/download?filePath=${filePath}`}
@@ -12,15 +14,15 @@ export const FileDownload = ({ filePath, fileStatus }: { filePath: string, fileS
 			<div className="flex flex-col overflow-hidden">
 				<span className="text-sm font-medium truncate">{fileName}</span>
 				<span className="text-xs text-gray-500">Attached file</span>
-				{fileStatus ?? <span
-					className={`ml-2 rounded-full px-2 py-0.5 text-xs ${
+				<span
+					className={`rounded-full px-2 py-0.5 text-xs w-fit ${
 						fileStatus === "uploading"
 							? "bg-blue-100 text-blue-700"
 							: "bg-green-100 text-green-700"
 					}`}
 				>
 					{fileStatus === "uploading" ? "Uploading..." : "Uploaded"}
-				</span>}
+				</span>
 			</div>
 		</a>
 	);

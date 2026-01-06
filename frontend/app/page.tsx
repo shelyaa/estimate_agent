@@ -28,6 +28,7 @@ export default function Page() {
 	const [input, setInput] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const [isUploading, setIsUploading] = useState(false);
+  const [fileIsVisible, setFileisVisible] = useState(false);
 
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -104,7 +105,7 @@ export default function Page() {
 	async function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
 		const file = e.target.files?.[0];
 		if (!file) return;
-
+    setFileisVisible(true)
 		setIsUploading(true);
 
 		try {
@@ -139,6 +140,7 @@ export default function Page() {
 			const agentMessage = await processMessageWithAgent(userMessage._id!);
 
 			setMessages((prev) => [...prev, agentMessage]);
+      setFileisVisible(false);
 		} catch (err) {
 			console.error("Error sending message:", err);
 		} finally {
@@ -194,12 +196,12 @@ export default function Page() {
 						)}
 						<div ref={bottomRef} />
 					</div>
-					<FilePreview
+					{fileIsVisible ? <FilePreview
 						attachedFile={attachedFile}
 						fileStatus={fileStatus}
 						uploadProgress={uploadProgress}
 						handleRemoveFile={handleRemoveFile}
-					/>
+					/> : null}
 					{activeChatId ? <ChatInput
 						fileInputRef={fileInputRef}
 						handleFileSelect={handleFileSelect}
