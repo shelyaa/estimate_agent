@@ -9,7 +9,7 @@ export async function sendMessageToAgent(message: IMessage) {
   const agentMessage: IMessage = {
     chatId: message.chatId,
     sender: "agent",
-    content: response?.toString() || "Sorry, I could not process your request.",
+    content: JSON.stringify(response) || "Sorry, I could not process your request.",
     attachedFiles: null,
   };
 

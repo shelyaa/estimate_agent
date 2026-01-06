@@ -8,6 +8,7 @@ import {getChats, createChat, deleteChat} from "@/api/chat";
 import {getMessages, sendMessage} from "@/api/messages";
 import {FileDownload} from "@/components/FileDownload";
 import {AgentMessageView} from "@/components/ParsedMessage";
+import {Loader} from "@/components/ui/loader";
 
 type Message = {
   _id?: string;
@@ -25,6 +26,7 @@ export default function Page() {
   const [input, setInput] = useState("");
   const [attachedFile, setAttachedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [fileStatus, setFileStatus] = useState<"idle" | "uploaded" | "parsed">(
     "idle"
   );
@@ -33,7 +35,7 @@ export default function Page() {
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   const activeChat = chats.find((c) => c._id === activeChatId);
-  const canSend = (!!input.trim() || attachedFile) && !!activeChat;
+  const canSend = !!input.trim() && !!activeChat;
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({behavior: "smooth"});
@@ -69,6 +71,8 @@ export default function Page() {
 
   async function handleCreateChat() {
     try {
+      setError(null);
+
       const newChat = await createChat();
       setChats((prev) => [...prev, {...newChat, title: "New Chat"}]);
       setActiveChatId(newChat._id);
@@ -82,6 +86,7 @@ export default function Page() {
       await deleteChat(chatId);
       setChats((prev) => prev.filter((c) => c._id !== chatId));
       if (chatId === activeChatId) setActiveChatId(null);
+      setError(null);
     } catch (err) {
       console.error(err);
     }
@@ -101,7 +106,8 @@ export default function Page() {
     setInput("");
 
     try {
-      setIsLoading(true)
+      setError(null);
+      setIsLoading(true);
       const result = await sendMessage(
         activeChatId,
         input,
@@ -109,11 +115,12 @@ export default function Page() {
       );
       setFileStatus("parsed");
       setMessages((prev) => [...prev, result]);
-    } catch (err) {
-      setIsLoading(false)
-      console.error(err);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      setIsLoading(false);
+      setError(err.message);
     }
-    setIsLoading(false)
+    setIsLoading(false);
   }
 
   return (
@@ -157,22 +164,28 @@ export default function Page() {
             )}
 
             {messages.map((msg, idx) => (
-                <div
-                    key={msg._id ?? idx}
-                    className={`px-4 py-2 rounded-xl max-w-[80%] whitespace-pre-wrap ${
-                        msg.sender === "user" ? "bg-gray-200 ml-auto" : "bg-gray-100"
-                    }`}
-                >
-                  <div className="flex flex-col gap-2">
-                    {msg.attachedFiles && (
-                        <FileDownload filePath={msg.attachedFiles} />
-                    )}
+              <div
+                key={msg._id ?? idx}
+                className={`px-4 py-2 rounded-xl max-w-[80%] whitespace-pre-wrap ${
+                  msg.sender === "user" ? "bg-gray-200 ml-auto" : "bg-gray-100"
+                }`}
+              >
+                <div className="flex flex-col gap-2">
+                  {msg.attachedFiles && (
+                    <FileDownload filePath={msg.attachedFiles} />
+                  )}
 
-                    {msg.sender === 'agent' ? <AgentMessageView msg={JSON.parse(JSON.stringify(msg))} /> : msg.content}
-                  </div>
+                  {msg.sender === "agent" ? (
+                    <AgentMessageView msg={msg} />
+                  ) : (
+                    msg.content
+                  )}
                 </div>
+              </div>
             ))}
-            {isLoading && 'Loading...'}
+            {isLoading && <Loader />}
+
+            {error && <div className="text-red-500 mt-2">{error}</div>}
             <div ref={bottomRef} />
           </div>
 
@@ -183,7 +196,7 @@ export default function Page() {
                 <span
                   className={`ml-2 rounded-full px-2 py-0.5 text-xs ${
                     fileStatus === "uploaded"
-                      ? "bg-gray-100"
+                      ? "bg-green-100 text-green-700"
                       : "bg-green-100 text-green-700"
                   }`}
                 >
@@ -227,7 +240,7 @@ export default function Page() {
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
-                  handleSend()
+                  handleSend();
                 }
               }}
               placeholder="Ask something..."

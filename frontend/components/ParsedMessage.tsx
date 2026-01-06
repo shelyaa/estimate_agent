@@ -19,13 +19,17 @@ interface MessageProps {
 }
 
 export const AgentMessageView = ({ msg }: MessageProps) => {
-  let data;
+ let data;
+if (typeof msg.content === "string") {
   try {
-    data = typeof msg.content === 'string' ? JSON.parse(msg.content) : msg.content;
+    data = JSON.parse(msg.content);
   } catch (e) {
     console.error("Помилка парсингу JSON:", e);
-    return <div>{JSON.stringify(msg.content)}</div>;
+    return <div>{msg.content}</div>; 
   }
+} else {
+  data = msg.content; 
+}
 
     switch (data.status) {
         case "ready_for_estimation":
