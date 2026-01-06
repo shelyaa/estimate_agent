@@ -1,4 +1,4 @@
-export const FileDownload = ({ filePath }: { filePath: string }) => {
+export const FileDownload = ({ filePath, fileStatus }: { filePath: string, fileStatus?: string }) => {
 	const fileName = filePath.split("/").pop();
 
 	return (
@@ -12,6 +12,15 @@ export const FileDownload = ({ filePath }: { filePath: string }) => {
 			<div className="flex flex-col overflow-hidden">
 				<span className="text-sm font-medium truncate">{fileName}</span>
 				<span className="text-xs text-gray-500">Attached file</span>
+				{fileStatus ?? <span
+					className={`ml-2 rounded-full px-2 py-0.5 text-xs ${
+						fileStatus === "uploading"
+							? "bg-blue-100 text-blue-700"
+							: "bg-green-100 text-green-700"
+					}`}
+				>
+					{fileStatus === "uploading" ? "Uploading..." : "Uploaded"}
+				</span>}
 			</div>
 		</a>
 	);
