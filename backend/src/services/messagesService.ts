@@ -1,6 +1,5 @@
 import {type IMessage, Message} from "../models/Message.js";
 import {runAgent} from "./agentService/llmService.js";
-import type {IMessageWithId} from "../constants/ioHandlerTypes.js";
 
 export async function createUserMessage(message: IMessage) {
   const newMessage = await Message.create(message);

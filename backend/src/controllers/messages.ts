@@ -79,11 +79,15 @@ export async function downloadFileByFilePath(req: Request, res: Response) {
 export async function uploadPdf(req: Request, res: Response) {
     try {
         const filePath = req?.file?.path;
+        const fileName = req?.file?.filename ?? 'Uploaded file';
         if (!filePath) throw new Error("FilePath is required");
 
-        res.json({filePath});
+        res.json({
+            filePath,
+            fileName,
+        });
     } catch (err: unknown) {
         const error = err as Error;
-        res.status(500).json({message: 'File was not uploaded successfully'});
+        res.status(400).json({message: 'File was not uploaded successfully'});
     }
 }
