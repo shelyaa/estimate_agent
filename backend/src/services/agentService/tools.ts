@@ -181,7 +181,7 @@ async function createExcel(data: AgentResponse) {
     fgColor: { argb: 'FFEEEEEE' }
   };
 
-  const folderPath = path.join(__dirname, '../../estimates');
+  const folderPath = path.join(__dirname, '../../../estimates');
   const fileName = Date.now() + 'data.xlsx';
   const filePath = path.join(folderPath, fileName);
 
