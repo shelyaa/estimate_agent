@@ -28,7 +28,7 @@ export default function Page() {
 	const [input, setInput] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const [isUploading, setIsUploading] = useState(false);
-  const [fileIsVisible, setFileisVisible] = useState(false);
+  	const [fileIsVisible, setFileisVisible] = useState(false);
 
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -39,7 +39,7 @@ export default function Page() {
 		fileStatus,
 		uploadProgress,
 		uploadFile,
-    handleRemoveFile
+    	handleRemoveFile
 	} = useFileUpload(fileInputRef);
 
 	const activeChat = chats.find((c) => c._id === activeChatId);
@@ -82,6 +82,12 @@ export default function Page() {
 		loadMessages();
 	}, [activeChatId]);
 
+	useEffect(() => {
+		if (uploadedFilePath && attachedFile && fileStatus === "uploaded") {
+			setFileisVisible(true);
+		}
+	}, [uploadedFilePath, attachedFile, fileStatus]);
+
 	async function handleCreateChat() {
 		try {
 			const newChat = await createChat();
@@ -105,7 +111,7 @@ export default function Page() {
 	async function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
 		const file = e.target.files?.[0];
 		if (!file) return;
-    setFileisVisible(true)
+    	setFileisVisible(true)
 		setIsUploading(true);
 
 		try {
@@ -131,16 +137,17 @@ export default function Page() {
 			);
 
 			setMessages((prev) => [...prev, userMessage]);
-
 			setInput("");
 
 			if (inputRef.current) {
 				inputRef.current.style.height = "auto";
 			}
-			const agentMessage = await processMessageWithAgent(userMessage._id!);
 
+			const agentMessage = await processMessageWithAgent(userMessage._id!);
 			setMessages((prev) => [...prev, agentMessage]);
-      setFileisVisible(false);
+
+			handleRemoveFile();
+			setFileisVisible(false);
 		} catch (err) {
 			console.error("Error sending message:", err);
 		} finally {

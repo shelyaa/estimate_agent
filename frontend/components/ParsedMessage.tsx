@@ -3,7 +3,7 @@ import { FileDownload } from "./FileDownload";
 interface AgentMessage {
 	status: string;
 	message?: string;
-  attached_file?: string;
+  	attached_file?: string;
 	tasks?: {
 		task: string;
 		milestone: string;
@@ -14,6 +14,7 @@ interface AgentMessage {
 	risks?: string[];
 	understood_requirements_summary?: string[];
 	missing_or_unclear_areas?: { area: string; problem: string }[];
+	unestimated_tasks: string[];
 	clarification_questions?: {
 		id: number;
 		priority: string;
@@ -77,6 +78,24 @@ export const AgentMessageView = ({ msg }: MessageProps) => {
 							</li>
 						))}
 					</ul>
+
+					{data.unestimated_tasks && data.unestimated_tasks.length > 0 && (
+						<div className="mt-6">
+							<h3 className="text-md font-semibold text-amber-700 mb-2">
+								Tasks without historical data (not estimated):
+							</h3>
+							<ul className="space-y-2">
+								{data.unestimated_tasks.map((taskName, idx) => (
+									<li
+										key={idx}
+										className="border-l-4 border-amber-400 bg-amber-50 p-2 rounded text-sm text-gray-700"
+									>
+										{taskName} — <span className="italic text-xs text-amber-600">No similar historical tasks found to provide accurate estimation.</span>
+									</li>
+								))}
+							</ul>
+						</div>
+					)}
 
 					{data.risks && data.risks.length > 0 && (
 						<div>

@@ -106,6 +106,7 @@ ESTIMATION_OUTPUT_FORMAT
   ],
   "confidence": "low | medium | high",
   "risks": ["..."],
+  "unestimated_tasks": ["..."],
   "attached_file": "file path"
 }
 
