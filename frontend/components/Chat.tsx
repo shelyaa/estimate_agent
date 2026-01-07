@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { FileDownload } from "./FileDownload";
 import { AgentMessageView } from "./ParsedMessage";
+import {Loader} from "@/components/ui/loader";
 
 type Message = {
 	_id?: string;
@@ -53,9 +54,7 @@ export const Chat = ({activeChatId, messages, isLoading, fileStatus}: ChatProps 
 					</div>
 				</div>
 			))}
-			{isLoading && (
-				<div className="text-gray-400 text-center">Processing...</div>
-			)}
+			{isLoading && <Loader />}
 			<div ref={bottomRef} />
 		</div>
 	);

@@ -32,7 +32,7 @@ export default function Page() {
 		fileStatus,
 		uploadProgress,
 		uploadFile,
-    handleRemoveFile
+    	handleRemoveFile
 	} = useFileUpload(fileInputRef);
 
 	const inputRef = useRef<HTMLTextAreaElement | null>(null);
@@ -132,7 +132,7 @@ export default function Page() {
 							handleRemoveFile={handleRemoveFile}
 						/>
 					) : null}
-          
+
 					{activeChatId ? (
 						<ChatInput
 							fileInputRef={fileInputRef}
@@ -141,7 +141,7 @@ export default function Page() {
 							isLoading={isLoading}
 							inputRef={inputRef}
 							handleSend={handleSend}
-              uploadedFilePath={uploadedFilePath}
+              				uploadedFilePath={uploadedFilePath}
 						/>
 					) : null}
 				</div>
