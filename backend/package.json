@@ -7,6 +7,7 @@
   "scripts": {
     "devv": "tsx ./src/services/langgraph/graph.ts",
     "dev": "npx nodemon",
+    "convert": "tsx ./src/utils/convertExcelToCSVAndSave.ts",
     "test": "tsx ./src/services/agentService/tools.ts",
     "build": "rimraf ./build && npx tsc",
     "start": "npm run build && node build/main"

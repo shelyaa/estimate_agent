@@ -1,5 +1,4 @@
-// hooks/useFileUpload.js
-import { RefObject, useState, useEffect } from "react";
+import { RefObject, useState } from "react";
 import axios from "axios";
 import useLocalStorage from "@/hooks/useStateWithLocalStorage";
 
@@ -10,15 +9,6 @@ export const useFileUpload = (fileInputRef: RefObject<HTMLInputElement | null>) 
 	const [uploadedFilePath, setUploadedFilePath] = useLocalStorage<string | null>('uploadedFilePath', null);
 	const [fileMetadata, setFileMetadata] = useLocalStorage<{name: string; size: number} | null>('fileMetadata', null);
 	const BASE_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/messages`;
-
-	useEffect(() => {
-		if (uploadedFilePath && fileMetadata) {
-			const file = new File([""], fileMetadata.name, { type: "application/pdf" });
-			setAttachedFile(file);
-			setFileStatus("uploaded");
-			setUploadProgress(100);
-		}
-	}, []);
 
 	const uploadFile = async (file: File) => {
 		setAttachedFile(file);
@@ -67,5 +57,6 @@ export const useFileUpload = (fileInputRef: RefObject<HTMLInputElement | null>) 
 		uploadFile,
 		handleRemoveFile,
 		uploadedFilePath,
+    fileMetadata
 	};
 };

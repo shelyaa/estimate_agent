@@ -29,10 +29,9 @@ interface MessageProps {
 export const AgentMessageView = ({ msg }: MessageProps) => {
 	let data: AgentMessage;
 	try {
-		data =
-			typeof msg.content === "string" ? JSON.parse(msg.content) : msg.content;
+		data = typeof msg.content === "string" ? JSON.parse(msg.content) : msg.content;
 	} catch (e) {
-		console.error("Помилка парсингу JSON:", e);
+		console.warn("Помилка парсингу JSON:", e);
 		return <div>{JSON.stringify(msg.content)}</div>;
 	}
 
@@ -56,7 +55,6 @@ export const AgentMessageView = ({ msg }: MessageProps) => {
 									Milestone: {t.milestone}
 								</div>
 
-								{/* Estimate Hours */}
 								<div className="text-sm text-gray-600">
 									<div className="font-medium mb-1">Estimate Hours:</div>
 									<ul className="grid grid-cols-2 md:grid-cols-4 gap-2 text-gray-700 text-xs">

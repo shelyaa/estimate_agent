@@ -1,7 +1,7 @@
 import { ArrowUpIcon, Plus } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Dispatch, RefObject, SetStateAction } from "react";
+import { RefObject, useState } from "react";
 
 interface ChatInputProps {
   fileInputRef: RefObject<HTMLInputElement | null>;
@@ -9,14 +9,17 @@ interface ChatInputProps {
   isUploading: boolean;
   isLoading: boolean;
   inputRef: RefObject<HTMLTextAreaElement | null>;
-  handleSend(): Promise<void>;
-  setInput: Dispatch<SetStateAction<string>>;
-  input: string;
-  canSend: boolean | "" | null | undefined;
+  handleSend(input: string): Promise<void>;
+  uploadedFilePath: string | null
 }
 
-export const ChatInput = ({fileInputRef, handleFileSelect, isUploading, isLoading, inputRef, handleSend, setInput, input, canSend}: ChatInputProps) => {
-	return (
+export const ChatInput = ({fileInputRef, handleFileSelect, isUploading, isLoading, inputRef, handleSend, uploadedFilePath}: ChatInputProps) => {
+	
+  const [input, setInput] = useState("");
+
+  const canSend = (!!input.trim() || uploadedFilePath) && !isLoading;
+  
+  return (
 		<div className="flex gap-2">
 			<input
 				ref={fileInputRef}
@@ -41,7 +44,8 @@ export const ChatInput = ({fileInputRef, handleFileSelect, isUploading, isLoadin
 				onKeyDown={(e) => {
 					if (e.key === "Enter" && !e.shiftKey) {
 						e.preventDefault();
-						handleSend();
+						handleSend(input);
+            setInput('');
 					}
 				}}
 				placeholder="Ask something..."
@@ -51,8 +55,11 @@ export const ChatInput = ({fileInputRef, handleFileSelect, isUploading, isLoadin
 				variant="outline"
 				size="icon"
 				disabled={!canSend}
-				onClick={handleSend}
-			>
+				onClick={() => {
+          handleSend(input)
+          setInput('');
+        }}
+      >
 				<ArrowUpIcon />
 			</Button>
 		</div>
