@@ -41,5 +41,17 @@ export async function runAgent(message: IMessage) {
 		},
 		config
 	);
-	return result.messages[result.messages.length - 1]?.content;
+	const response = await parseClassifyLLMJson(result.messages[result.messages.length - 1]?.content);
+  return response;
+}
+
+async function parseClassifyLLMJson(raw: string) {
+  try {
+    const cleaned = String(raw)
+      .trim()
+      .replace(/```json|```/g, '');
+      return cleaned;
+  } catch {
+    throw new Error('Failed to parse LLM response');
+  }
 }

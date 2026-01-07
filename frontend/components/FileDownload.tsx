@@ -1,8 +1,6 @@
 export const FileDownload = ({ filePath, fileStatus }: { filePath: string, fileStatus?: string }) => {
 	const fileName = filePath.split("/").pop();
 
-  console.log(fileStatus);
-  
 	return (
 		<a
 			href={`${process.env.NEXT_PUBLIC_API_URL}/api/messages/download?filePath=${filePath}`}

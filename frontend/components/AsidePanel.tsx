@@ -1,17 +1,52 @@
+import { createChat, deleteChat, getChats } from "@/api/chat";
 import { Button } from "./ui/button";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 type Chat = { _id: string };
 
 interface AsidePanelProps {
-  handleCreateChat: () => Promise<void>;
   setActiveChatId: Dispatch<SetStateAction<string | null>>;
-  handleDeleteChat: (chatId: string) => Promise<void>;
   activeChatId: string | null;
-  chats: Chat[];
 }
 
-export const AssidePanel = ({handleCreateChat, setActiveChatId, handleDeleteChat, chats, activeChatId}: AsidePanelProps) => {
+export const AssidePanel = ({ setActiveChatId, activeChatId}: AsidePanelProps) => {
+  
+  const [chats, setChats] = useState<Chat[]>([]);
+  
+  useEffect(() => {
+    console.log('render aside');
+    
+		async function loadChats() {
+			const data = await getChats();
+			setChats(data);
+			if (!activeChatId && data.length > 0) {
+				setActiveChatId(data[0]._id);
+			}
+		}
+
+		loadChats();
+	}, []);
+
+  async function handleCreateChat() {
+    try {
+      const newChat = await createChat();
+      setChats((prev) => [...prev, { ...newChat, title: "New Chat" }]);
+      setActiveChatId(newChat._id);
+    } catch (err) {
+      console.error("Error creating chat:", err);
+    }
+  }
+
+  async function handleDeleteChat(chatId: string) {
+    try {
+      await deleteChat(chatId);
+      setChats((prev) => prev.filter((c) => c._id !== chatId));
+      if (chatId === activeChatId) setActiveChatId(null);
+    } catch (err) {
+      console.error("Error deleting chat:", err);
+    }
+  }
+  
   return (
     <aside className="w-64 bg-white border-r p-4 space-y-3">
       <Button className="w-full" onClick={handleCreateChat}>
