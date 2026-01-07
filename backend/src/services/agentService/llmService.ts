@@ -6,6 +6,8 @@ import { createExcelTool, getHistoricalEstimatesTool, pdfReaderTool } from "./to
 import { systemPrompt } from "./prompts.js";
 import { MongoDBSaver } from "@langchain/langgraph-checkpoint-mongodb";
 import { getMongoClient } from "../../config/db.js";
+import {createValidationAndRetryMiddleware} from "./middlewares.js";
+import {parseClassifyLLMJson} from "../../utils/parseLLMResponse.js";
 dotenv.config();
 
 let agent: any | null = null;
@@ -21,6 +23,7 @@ const agentSetup = async () => {
 		model: llmModel(),
 		tools: [getHistoricalEstimatesTool, pdfReaderTool, createExcelTool],
 		systemPrompt: systemPrompt,
+		middleware: [createValidationAndRetryMiddleware(1)],
 		checkpointer,
 	});
 
@@ -41,17 +44,6 @@ export async function runAgent(message: IMessage) {
 		},
 		config
 	);
-	const response = await parseClassifyLLMJson(result.messages[result.messages.length - 1]?.content);
-  return response;
-}
 
-async function parseClassifyLLMJson(raw: string) {
-  try {
-    const cleaned = String(raw)
-      .trim()
-      .replace(/```json|```/g, '');
-      return cleaned;
-  } catch {
-    throw new Error('Failed to parse LLM response');
-  }
+	return parseClassifyLLMJson(result.messages[result.messages.length - 1]?.content);
 }
