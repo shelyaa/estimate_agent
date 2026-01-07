@@ -55,7 +55,6 @@ export const AgentMessageView = ({ msg }: MessageProps) => {
 									Milestone: {t.milestone}
 								</div>
 
-								{/* Estimate Hours */}
 								<div className="text-sm text-gray-600">
 									<div className="font-medium mb-1">Estimate Hours:</div>
 									<ul className="grid grid-cols-2 md:grid-cols-4 gap-2 text-gray-700 text-xs">
