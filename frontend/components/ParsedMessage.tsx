@@ -29,10 +29,9 @@ interface MessageProps {
 export const AgentMessageView = ({ msg }: MessageProps) => {
 	let data: AgentMessage;
 	try {
-		data =
-			typeof msg.content === "string" ? JSON.parse(msg.content) : msg.content;
+		data = typeof msg.content === "string" ? JSON.parse(msg.content) : msg.content;
 	} catch (e) {
-		console.error("Помилка парсингу JSON:", e);
+		console.warn("Помилка парсингу JSON:", e);
 		return <div>{JSON.stringify(msg.content)}</div>;
 	}
 
