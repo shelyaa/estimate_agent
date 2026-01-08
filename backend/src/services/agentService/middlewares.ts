@@ -68,7 +68,7 @@ export const createValidationAndRetryMiddleware = (maxRetries: number = 1) => {
         wrapModelCall: async (request, handler) => {
             let lastError = "";
 
-            for (let attempt = 0; attempt < maxRetries; attempt++) {
+            for (let attempt = 0; attempt <= maxRetries; attempt++) {
                 try {
                     console.log(`Attempt ${attempt + 1} of ${maxRetries}`);
                     if (lastError) {
