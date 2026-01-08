@@ -20,6 +20,7 @@ interface AgentMessage {
 		priority: string;
 		question: string;
 	}[];
+	details?: string;
 }
 
 interface MessageProps {
@@ -188,6 +189,13 @@ export const AgentMessageView = ({ msg }: MessageProps) => {
 			return (
 				<div className="p-4 bg-red-50 border border-red-200 rounded text-red-700 font-medium">
 					Error: {data.message || "Unknown error"}
+				</div>
+			);
+
+		case "other":
+			return (
+				<div className="p-3 rounded ">
+					<div>{data.details || "I am just an estimating bot, i can not understand it"}</div>
 				</div>
 			);
 
