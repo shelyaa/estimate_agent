@@ -8,6 +8,7 @@ import { AssidePanel } from "@/components/AsidePanel";
 import { useFileUpload } from "@/api/useUploadFile";
 import { ChatInput } from "@/components/ChatInput";
 import { Chat } from "@/components/Chat";
+import { toast } from 'react-toastify';
 
 type Message = {
 	_id?: string;
@@ -96,7 +97,12 @@ export default function Page() {
 			}
 
 			const agentMessage = await processMessageWithAgent(userMessage._id!);
-			setMessages((prev) => [...prev, agentMessage]);
+			if (agentMessage.status === "error") {
+				toast.error(`Error processing message: ${agentMessage.data}`);
+				return;
+			}
+
+			setMessages((prev) => [...prev, agentMessage.data]);
 
 			handleRemoveFile();
 			setFileisVisible(false);

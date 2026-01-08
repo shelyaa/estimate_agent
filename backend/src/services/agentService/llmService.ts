@@ -6,7 +6,7 @@ import { createExcelTool, getHistoricalEstimatesTool, pdfReaderTool } from "./to
 import { systemPrompt } from "./prompts.js";
 import { MongoDBSaver } from "@langchain/langgraph-checkpoint-mongodb";
 import { getMongoClient } from "../../config/db.js";
-import {createValidationAndRetryMiddleware} from "./middlewares.js";
+import {createCheckIfUseHistoricalDataMiddleware, createValidationAndRetryMiddleware} from "./middlewares.js";
 import {parseClassifyLLMJson} from "../../utils/parseLLMResponse.js";
 dotenv.config();
 
@@ -23,7 +23,7 @@ const agentSetup = async () => {
 		model: llmModel(),
 		tools: [getHistoricalEstimatesTool, pdfReaderTool, createExcelTool],
 		systemPrompt: systemPrompt,
-		middleware: [createValidationAndRetryMiddleware(1)],
+		middleware: [createValidationAndRetryMiddleware(1), createCheckIfUseHistoricalDataMiddleware()],
 		checkpointer,
 	});
 
