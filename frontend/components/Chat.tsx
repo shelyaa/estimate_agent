@@ -22,8 +22,10 @@ export const Chat = ({activeChatId, messages, isLoading, fileStatus}: ChatProps 
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-		bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-	}, [messages]);
+	  if (!isLoading) {
+		  bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+	  }
+	}, [messages, isLoading]);
 
 	return (
 		<div className="flex-1 overflow-y-auto p-4 space-y-3 max-h-20vh items-center justify-center">
