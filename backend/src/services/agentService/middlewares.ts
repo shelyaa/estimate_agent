@@ -1,4 +1,4 @@
-import {createMiddleware, type WrapModelCallHandler} from "langchain";
+import {BaseMessage, createMiddleware, ToolMessage, type WrapModelCallHandler} from "langchain";
 import {responseStatuses} from "./responseStatuses.js";
 import {
     clarificationOutputSchema,
@@ -92,3 +92,47 @@ export const createValidationAndRetryMiddleware = (maxRetries: number = 1) => {
         },
     });
 };
+
+function checkIfHistoricalDataUsedBeforeEstimation(messages: BaseMessage[]) {
+    for(let i = messages.length-1; i >= 0; i--) {
+        const msg = messages[i];
+
+        if(!msg?.name) {            //Means that it is HumanMessage, so that if human provided message right before estimation -> historical data was not used
+            return false;
+        }
+
+        if(msg?.name === 'get_historical_estimates') {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+export const createCheckIfUseHistoricalDataMiddleware = () => {
+    return createMiddleware({
+        name: "CheckIfUseHistoricalDataMiddleware",
+        afterAgent: (state, runtime) => {
+            const lastMessage = state.messages[state.messages.length - 1];
+            if(!lastMessage) return;
+
+            const content = lastMessage.content;
+
+            const parsedContent = parseClassifyLLMJson(content.toString());
+            const contentJson = JSON.parse(parsedContent);
+            console.log(`-> Checking historical data usage for status: ${contentJson.status}`);
+            if(contentJson.status !== responseStatuses.READY_FOR_ESTIMATION) {
+                return;
+            }
+
+            const usedHistoricalData = checkIfHistoricalDataUsedBeforeEstimation(state.messages);
+            console.log(`-> Used historical data: ${usedHistoricalData}`);
+
+            if(!usedHistoricalData) {
+                throw new Error('Historical data was not used before providing estimates.');
+            }
+
+            return;
+        }
+    })
+}

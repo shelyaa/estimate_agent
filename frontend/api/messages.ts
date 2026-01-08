@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 
 const BASE_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/messages`;
 
@@ -32,6 +32,19 @@ export const createUserMessage = async (
 };
 
 export const processMessageWithAgent = async (messageId: string) => {
-	const res = await axios.post(`${BASE_URL}/${messageId}/process`);
-	return res.data;
+	try {
+		const res = await axios.post(`${BASE_URL}/${messageId}/process`);
+		return {
+			status: "success",
+			data: res.data,
+		};
+	}catch(err: unknown) {
+		const axiosError = err as AxiosError;
+		const errorMsg = (axiosError?.response?.data as { message?: string})?.message;
+
+		return {
+			status: "error",
+			data: errorMsg,
+		}
+	}
 };
