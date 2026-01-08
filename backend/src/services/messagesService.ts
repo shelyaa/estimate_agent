@@ -12,7 +12,7 @@ export async function processMessageWithAgent(userMessage: IMessage) {
   const agentMessage: IMessage = {
     chatId: userMessage.chatId,
     sender: "agent",
-    content: response?.toString() || "Sorry, I could not process your request.",
+    content: response?.toString() || JSON.stringify({status: 'other', details: "No tasks to estimate."}),
     attachedFiles: null,
   };
 

@@ -17,7 +17,7 @@ export const ChatInput = ({fileInputRef, handleFileSelect, isUploading, isLoadin
 	
   const [input, setInput] = useState("");
 
-  const canSend = (!!input.trim() || uploadedFilePath) && !isLoading;
+  const canSend = (!!input.trim()) && !isLoading;
   
   return (
 		<div className="flex gap-2">

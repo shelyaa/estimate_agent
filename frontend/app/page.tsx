@@ -22,18 +22,18 @@ export default function Page() {
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [isUploading, setIsUploading] = useState(false);
-  const [fileIsVisible, setFileisVisible] = useState(false);
+  	const [fileIsVisible, setFileisVisible] = useState(false);
 
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const {
-		uploadedFilePath,
-		attachedFile,
-		fileStatus,
-		uploadProgress,
-		uploadFile,
-    	handleRemoveFile
-	} = useFileUpload(fileInputRef);
+	  const {
+			uploadedFilePath,
+			attachedFile,
+			fileStatus,
+			uploadProgress,
+			uploadFile,
+			handleRemoveFile
+		} = useFileUpload(fileInputRef);
 
 	const inputRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -68,7 +68,7 @@ export default function Page() {
 		setIsUploading(true);
 
 		try {
-      uploadFile(file)
+		  uploadFile(file)
 		} catch (err) {
 			console.error("Error uploading file:", err);
 			if (fileInputRef.current) fileInputRef.current.value = "";

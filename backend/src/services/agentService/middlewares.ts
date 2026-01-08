@@ -1,6 +1,11 @@
 import {createMiddleware, type WrapModelCallHandler} from "langchain";
 import {responseStatuses} from "./responseStatuses.js";
-import {clarificationOutputSchema, errorOutputSchema, estimationOutputSchema} from "./validationResponseSchemas.js";
+import {
+    clarificationOutputSchema,
+    errorOutputSchema,
+    estimationOutputSchema,
+    otherOutputSchema
+} from "./validationResponseSchemas.js";
 import {parseClassifyLLMJson} from "../../utils/parseLLMResponse.js";
 import {HumanMessage} from "@langchain/core/messages";
 
@@ -41,6 +46,10 @@ async function validateHandler(handler: WrapModelCallHandler<undefined, never>, 
         }
         case responseStatuses.ERROR: {
             errorOutputSchema.parse(contentJson);
+            break;
+        }
+        case responseStatuses.OTHER: {
+            otherOutputSchema.parse(contentJson);
             break;
         }
         default: {

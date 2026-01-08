@@ -63,3 +63,8 @@ export const errorOutputSchema = z.object({
     status: z.literal(responseStatuses.ERROR),
     message: z.string(),
 });
+
+export const otherOutputSchema = z.object({
+    status: z.literal(responseStatuses.OTHER),
+    details: z.string(),
+});
