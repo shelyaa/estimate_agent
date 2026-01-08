@@ -8,6 +8,7 @@ import { AssidePanel } from "@/components/AsidePanel";
 import { useFileUpload } from "@/api/useUploadFile";
 import { ChatInput } from "@/components/ChatInput";
 import { Chat } from "@/components/Chat";
+import { updateChat } from "@/api/chat";
 
 type Message = {
 	_id?: string;
@@ -23,6 +24,7 @@ export default function Page() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isUploading, setIsUploading] = useState(false);
   const [fileIsVisible, setFileisVisible] = useState(false);
+  const [activeChatTitle, setActiveChatTitle] = useState('');
 
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -96,6 +98,14 @@ export default function Page() {
 			}
 
 			const agentMessage = await processMessageWithAgent(userMessage._id!);
+      const title = JSON.parse(agentMessage.content).title
+      if (title) {
+        const updated = await updateChat(activeChatId, title)
+        setActiveChatTitle(updated.title);
+        console.log(updated);
+      }
+      
+      
 			setMessages((prev) => [...prev, agentMessage]);
 
 			handleRemoveFile();
@@ -112,6 +122,7 @@ export default function Page() {
 			<AssidePanel
 				setActiveChatId={setActiveChatId}
 				activeChatId={activeChatId}
+        activeChatTitle={activeChatTitle}
 			/>
 			<section className="flex-1 p-6 flex justify-center">
 				<div className="w-full max-w-5xl bg-white rounded-xl shadow p-4 flex flex-col gap-4">

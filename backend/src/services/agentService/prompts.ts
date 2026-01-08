@@ -38,6 +38,7 @@ STRICT WORKFLOW
 STEP 1: Read project requirements  
 - Use the tool "read_pdf_document" to extract text from the PDF.
 - Summarize what is clearly understood.
+- Give a very short name to a chat and write it to "title"
 
 STEP 2: Validate requirements completeness  
 Check whether ALL of the following are clearly defined:
@@ -67,6 +68,7 @@ CLARIFICATION_OUTPUT_FORMAT
 ====================
 {
   "status": "clarification_required",
+  "title": "...",
   "understood_requirements_summary": ["..."],
   "missing_or_unclear_areas": [{"area": "...", "problem": "..."}],
   "clarification_questions": [

@@ -4,6 +4,8 @@ import {responseStatuses} from "./responseStatuses.js";
 export const clarificationOutputSchema = z.object({
     status: z.literal(responseStatuses.CLARIFICATION_REQUIRED),
 
+    title: z.string(),
+
     understood_requirements_summary: z.array(z.string()),
 
     missing_or_unclear_areas: z.array(
