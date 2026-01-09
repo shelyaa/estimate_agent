@@ -3,17 +3,23 @@ interface FilePreviewProps {
   fileStatus: string;
   uploadProgress: number;
   handleRemoveFile: ()=> void;
+  activeChatId: string | null;
+  uploadedFilePath: string | null;
 }
 
-export const FilePreview = ({ attachedFile, fileStatus, uploadProgress, handleRemoveFile}: FilePreviewProps) => {
+export const FilePreview = ({ attachedFile, fileStatus, uploadProgress, handleRemoveFile, activeChatId, uploadedFilePath}: FilePreviewProps) => {
 
-  if (!attachedFile) return null;
+  if (!attachedFile || !uploadedFilePath) return null;
+
+  const parsedFilePath = JSON.parse(uploadedFilePath);
+
+  if (!activeChatId || !parsedFilePath[activeChatId]) return null;
 
   return (
     <div className="border rounded px-3 py-2 text-sm bg-white shadow-sm w-full">
       <div className="flex justify-between items-center mb-2">
         <div className="flex items-center gap-2 overflow-hidden">
-          <span className="truncate max-w-[180px]">📄 {attachedFile.name}</span>
+          <span className="truncate max-w-45">📄 {attachedFile.name}</span>
           <span
             className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium transition-colors ${
               fileStatus === "uploading"
