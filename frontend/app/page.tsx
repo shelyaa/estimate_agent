@@ -24,7 +24,7 @@ export default function Page() {
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [isUploading, setIsUploading] = useState(false);
-  	const [fileIsVisible, setFileisVisible] = useState(false);
+  		const [fileIsVisible, setFileisVisible] = useState(false);
   const [activeChatTitle, setActiveChatTitle] = useState('');
 
 	const fileInputRef = useRef<HTMLInputElement>(null);
