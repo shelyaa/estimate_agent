@@ -103,8 +103,9 @@ export default function Page() {
 				toast.error(`Error processing message: ${agentMessage.data}`);
 				return;
 			}
-
-      const title = JSON.parse(agentMessage.content).title
+      console.log(agentMessage);
+      
+      const title = JSON.parse(agentMessage.data.content).title
       if (title) {
         const updated = await updateChat(activeChatId, title)
         setActiveChatTitle(updated.title);
