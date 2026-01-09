@@ -2,22 +2,22 @@ import { createChat, deleteChat, getChats } from "@/api/chat";
 import { Button } from "./ui/button";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-type Chat = { _id: string };
+type Chat = { _id: string, title: string };
 
 interface AsidePanelProps {
   setActiveChatId: Dispatch<SetStateAction<string | null>>;
   activeChatId: string | null;
+  activeChatTitle: string
 }
 
-export const AssidePanel = ({ setActiveChatId, activeChatId}: AsidePanelProps) => {
+export const AssidePanel = ({ setActiveChatId, activeChatId, activeChatTitle}: AsidePanelProps) => {
   
   const [chats, setChats] = useState<Chat[]>([]);
   
   useEffect(() => {
-    console.log('render aside');
-    
 		async function loadChats() {
 			const data = await getChats();
+
 			setChats(data);
 			if (!activeChatId && data.length > 0) {
 				setActiveChatId(data[0]._id);
@@ -25,7 +25,7 @@ export const AssidePanel = ({ setActiveChatId, activeChatId}: AsidePanelProps) =
 		}
 
 		loadChats();
-	}, []);
+	}, [activeChatTitle]);
 
   async function handleCreateChat() {
     try {
@@ -45,7 +45,7 @@ export const AssidePanel = ({ setActiveChatId, activeChatId}: AsidePanelProps) =
     } catch (err) {
       console.error("Error deleting chat:", err);
     }
-  }
+  }  
   
   return (
     <aside className="w-64 bg-white border-r p-4 space-y-3">
@@ -61,7 +61,7 @@ export const AssidePanel = ({ setActiveChatId, activeChatId}: AsidePanelProps) =
             chat._id === activeChatId ? "bg-gray-200" : "hover:bg-gray-100"
           }`}
         >
-          <span className="truncate">{chat._id}</span>
+          <span className="truncate">{chat.title}</span>
           <button
             onClick={(e) => {
               e.stopPropagation();
