@@ -18,3 +18,8 @@ export const deleteChat = async (chatId: string) => {
   const res = await axios.delete(`${BASE_URL}/${chatId}`);
   return res.data;
 };
+
+export const updateChat = async (chatId: string, title: string) => {
+  const res = await axios.put(`${BASE_URL}/${chatId}`, {title: title});
+  return res.data;
+}

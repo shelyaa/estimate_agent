@@ -9,6 +9,7 @@ import { useFileUpload } from "@/api/useUploadFile";
 import { ChatInput } from "@/components/ChatInput";
 import { Chat } from "@/components/Chat";
 import { toast } from 'react-toastify';
+import { updateChat } from "@/api/chat";
 
 type Message = {
 	_id?: string;
@@ -23,7 +24,8 @@ export default function Page() {
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [isUploading, setIsUploading] = useState(false);
-  	const [fileIsVisible, setFileisVisible] = useState(false);
+  		const [fileIsVisible, setFileisVisible] = useState(false);
+  const [activeChatTitle, setActiveChatTitle] = useState('');
 
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -101,7 +103,15 @@ export default function Page() {
 				toast.error(`Error processing message: ${agentMessage.data}`);
 				return;
 			}
-
+      console.log(agentMessage);
+      
+      const title = JSON.parse(agentMessage.data.content).title
+      if (title) {
+        const updated = await updateChat(activeChatId, title)
+        setActiveChatTitle(updated.title);
+      }
+      
+      
 			setMessages((prev) => [...prev, agentMessage.data]);
 
 			handleRemoveFile();
@@ -118,6 +128,7 @@ export default function Page() {
 			<AssidePanel
 				setActiveChatId={setActiveChatId}
 				activeChatId={activeChatId}
+        activeChatTitle={activeChatTitle}
 			/>
 			<section className="flex-1 p-6 flex justify-center">
 				<div className="w-full max-w-5xl bg-white rounded-xl shadow p-4 flex flex-col gap-4">
