@@ -17,8 +17,7 @@ export const AssidePanel = ({ setActiveChatId, activeChatId, activeChatTitle}: A
   useEffect(() => {
 		async function loadChats() {
 			const data = await getChats();
-      console.log(data[0]);
-      
+
 			setChats(data);
 			if (!activeChatId && data.length > 0) {
 				setActiveChatId(data[0]._id);
@@ -46,10 +45,7 @@ export const AssidePanel = ({ setActiveChatId, activeChatId, activeChatTitle}: A
     } catch (err) {
       console.error("Error deleting chat:", err);
     }
-  }
-
-  console.log(chats);
-  
+  }  
   
   return (
     <aside className="w-64 bg-white border-r p-4 space-y-3">

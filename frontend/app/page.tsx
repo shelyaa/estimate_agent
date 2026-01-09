@@ -102,7 +102,6 @@ export default function Page() {
       if (title) {
         const updated = await updateChat(activeChatId, title)
         setActiveChatTitle(updated.title);
-        console.log(updated);
       }
       
       
